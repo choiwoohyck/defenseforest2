@@ -28,7 +28,8 @@ namespace EnumManagerSpace
     {
         FIRE,
         ICE,
-        ICEROAD
+        ICEROAD,
+        LEAF
     };
 
     public enum MonsterType
@@ -52,7 +53,8 @@ namespace EnumManagerSpace
         BULLET1HITWALL,
         FIREELEMENTHIT,
         FIREELEMENTEXPLOSION,
-        ICICLE
+        ICICLE,
+        LEAFATTACK
     };
 
     public enum OwnerType
@@ -61,6 +63,7 @@ namespace EnumManagerSpace
         FIRELEMENT,
         ICEELEMENT,
         ROADICEELEMENT,
+        LEAFELEMENT,
         ENEMY
     }
 }

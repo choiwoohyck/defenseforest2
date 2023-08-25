@@ -40,7 +40,7 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((type == OwnerType.PLAYER || type == OwnerType.FIRELEMENT || type == OwnerType.ICEELEMENT || type == OwnerType.ROADICEELEMENT) && !isHit)
+        if ((type == OwnerType.PLAYER || type == OwnerType.FIRELEMENT || type == OwnerType.ICEELEMENT || type == OwnerType.ROADICEELEMENT || type == OwnerType.LEAFELEMENT) && !isHit)
         {
             float bulletAngle = (transform.rotation.z+180) * Mathf.Deg2Rad;
 
@@ -85,6 +85,8 @@ public class Bullet : MonoBehaviour
                 EffectManager.instance.CreateEffect(EffectType.BULLET1HIT, transform.position, transform.rotation);
             else if (type == OwnerType.FIRELEMENT)
                 EffectManager.instance.CreateEffect(EffectType.FIREELEMENTHIT, transform.position, transform.rotation);
+            else if (type == OwnerType.LEAFELEMENT)
+                EffectManager.instance.CreateEffect(EffectType.LEAFATTACK, transform.position, transform.rotation);
             else if (type == OwnerType.ICEELEMENT)
             {
                 collision.gameObject.GetComponent<Enemy>().frozenCnt++;

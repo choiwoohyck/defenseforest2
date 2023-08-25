@@ -11,6 +11,9 @@ public class ElementAttack : MonoBehaviour
     
     public float damage;    
     public float attackDelay;
+    float attackTimer = 0;
+
+    public float bulletSpeed;
 
     public bool isAttack = false;
     public bool isBuilding = false;
@@ -28,6 +31,7 @@ public class ElementAttack : MonoBehaviour
         element = transform.parent.gameObject;
         damage = element.GetComponent<UnitInfo>().damage;   
         attackDelay = element.GetComponent<UnitInfo>().attackDelay;
+        attackTimer = attackDelay;
     }
 
     // Update is called once per frame
@@ -36,12 +40,9 @@ public class ElementAttack : MonoBehaviour
         if (transform.parent.gameObject.GetComponent<Element>().isRoad && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.ICEROAD)
             return;
 
-        if (target != null && Vector2.Distance(transform.position, target.transform.position) > 3.0f)
-            target = null;
+        attackTimer += Time.deltaTime;
 
-
-        if (!isBuilding)
-            return;
+        Debug.Log(attackDelay);
 
         if (target != null && target.GetComponent<Enemy>().hp <= 0)
         {
@@ -49,10 +50,14 @@ public class ElementAttack : MonoBehaviour
             isAttack = false;
         }
 
-        if (isAttack && target != null)
+        if (!isBuilding)
+            return;
+
+        if (isAttack && target != null && attackTimer >= attackDelay)
         {
             StartCoroutine("Attack");
-            isAttack = false;
+            attackTimer = 0;
+            Debug.Log("Attack!!");
         }
 
     }  
@@ -62,8 +67,6 @@ public class ElementAttack : MonoBehaviour
         {
             target = collision.gameObject;
             isAttack = true;
-
-            Debug.Log("OnTriggerEnter2D");
         }
     }
 
@@ -73,8 +76,6 @@ public class ElementAttack : MonoBehaviour
         {
             target = collision.gameObject;
             isAttack = true;
-            Debug.Log("OnTriggerStay2D");
-
         }
     }
 
@@ -83,10 +84,8 @@ public class ElementAttack : MonoBehaviour
         if (collision == target && target != null)
         {
             target = null;
+            Debug.Log("targetNull");
             isAttack = false;
-
-            Debug.Log("OnTriggerExit2D");
-
         }
     }
 
@@ -96,22 +95,22 @@ public class ElementAttack : MonoBehaviour
         {
             Vector2 startVec = new Vector2(transform.position.x, transform.position.y);
             Vector2 rotVec = new Vector2(target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
+
             rotVec.Normalize();
+
             if (element.GetComponent<Element>().elementType == ElementType.ICE)
                 BulletManager.instance.GetObject(startVec, 15f, rotVec, OwnerType.ICEELEMENT, damage);
             else if (element.GetComponent<Element>().elementType == ElementType.FIRE)
-                BulletManager.instance.GetObject(startVec, 10f, rotVec, OwnerType.FIRELEMENT, damage);
+                BulletManager.instance.GetObject(startVec, 15f, rotVec, OwnerType.FIRELEMENT, damage);
             else if (element.GetComponent<Element>().elementType == ElementType.ICEROAD)
-                BulletManager.instance.GetObject(startVec, 10f, rotVec, OwnerType.ROADICEELEMENT, damage);
-
+                BulletManager.instance.GetObject(startVec, 15f, rotVec, OwnerType.ROADICEELEMENT, damage);
+            else if (element.GetComponent<Element>().elementType == ElementType.LEAF)
+                BulletManager.instance.GetObject(startVec, 3, rotVec, OwnerType.LEAFELEMENT, damage);
         }
 
-        Debug.Log("Attack");
-
-
-        yield return new WaitForSeconds(attackDelay);
-
         isAttack = true;
+
+        yield return  null;
 
     }
 

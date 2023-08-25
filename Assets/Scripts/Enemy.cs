@@ -37,6 +37,7 @@ public class Enemy : MonoBehaviour
 
     Animator animator;
     Rigidbody2D rigidbody2D;
+    BoxCollider2D collider2D;
 
     Vector3 direction = Vector3.zero;
     public void StatusInit(MonsterType m_type)
@@ -68,6 +69,7 @@ public class Enemy : MonoBehaviour
         animator = GetComponent<Animator>();
         EnterState(state);
         rigidbody2D = GetComponent<Rigidbody2D>();
+        collider2D = GetComponent<BoxCollider2D>();
         //EnemyUnitManager.instance.enemyUnits.Add(gameObject);
     }
 
@@ -97,7 +99,7 @@ public class Enemy : MonoBehaviour
             StartCoroutine("Frozen");
             isFrozen = false;
             frozenCnt = 0;
-        }    
+        }
     }
 
     void EnterState(EnemyState currentState)
@@ -160,6 +162,8 @@ public class Enemy : MonoBehaviour
                 }                
             }
 
+
+            // 앞에 다른 적있을때 멈추는 코드
             if (!isRush)
             {
                 direction = (target.transform.position - transform.position).normalized;
@@ -225,6 +229,7 @@ public class Enemy : MonoBehaviour
             attackTimer += Time.deltaTime;
             rigidbody2D.velocity = Vector3.zero;
             rigidbody2D.angularVelocity = 0;
+            collider2D.isTrigger = true;
 
             if (attackTimer >= 1)
             {
@@ -234,10 +239,9 @@ public class Enemy : MonoBehaviour
 
             if (Vector2.Distance(transform.position, target.transform.position) > 0.9f && target != GameObject.Find("MagicStone")) 
             {
-
                 ChangeState(EnemyState.SEARCH);
                 animator.SetBool("isAttack", false);
-
+                collider2D.isTrigger = false;
             }
 
         }
@@ -282,7 +286,7 @@ public class Enemy : MonoBehaviour
                 target.GetComponent<UnitInfo>().hp -= damage;
                 hp = 0;
                 isAttack = true;
-
+                collider2D.isTrigger = true;
                 return;
             }
             else
@@ -334,20 +338,26 @@ public class Enemy : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
+            
             collision.gameObject.GetComponent<UnitInfo>().hp -= damage;
             collision.gameObject.GetComponent<HitObject>().ChangeColor();
+            collider2D.isTrigger = true;
             hp = 0;
         }
 
         if (collision.gameObject.name == ("MagicStone"))
         {
             animator.SetBool("isAttack", true);
+            collider2D.isTrigger = true;
             ChangeState(EnemyState.ATTACK);
         }
 
-        Debug.Log(collision.gameObject);
-
-        
     }
 
+
+    bool InCamera()
+    {
+        Vector3 cameraPos = Camera.main.WorldToViewportPoint(transform.position);
+        return (cameraPos.x < 1f && cameraPos.y < 1f && cameraPos.x > 0f && cameraPos.y > 0f);
+    }
 }

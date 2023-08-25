@@ -39,7 +39,8 @@ public class Element : MonoBehaviour
             gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.1f, 5);
         if (type == ElementType.ICEROAD)
             gameObject.GetComponent<UnitInfo>().StatusInit(50, 0.5f, 15);
-
+        if (type == ElementType.LEAF)
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 100);
     }
 
     // Update is called once per frame
