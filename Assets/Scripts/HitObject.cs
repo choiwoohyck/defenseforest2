@@ -38,5 +38,11 @@ public class HitObject : MonoBehaviour
         isChange = true;
     }
 
+    public void ChangeAddictColor()
+    {
+        renderer.color = Color.green;
+        isChange = true;
+    }
+
   
 }

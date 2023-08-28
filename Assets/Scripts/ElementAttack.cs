@@ -37,7 +37,7 @@ public class ElementAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.parent.gameObject.GetComponent<Element>().isRoad && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.ICEROAD)
+        if (transform.parent.gameObject.GetComponent<Element>().isRoad && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.ICEROAD && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.LEAFROAD)
             return;
 
         attackTimer += Time.deltaTime;
@@ -105,7 +105,9 @@ public class ElementAttack : MonoBehaviour
             else if (element.GetComponent<Element>().elementType == ElementType.ICEROAD)
                 BulletManager.instance.GetObject(startVec, 15f, rotVec, OwnerType.ROADICEELEMENT, damage);
             else if (element.GetComponent<Element>().elementType == ElementType.LEAF)
-                BulletManager.instance.GetObject(startVec, 3, rotVec, OwnerType.LEAFELEMENT, damage);
+                BulletManager.instance.GetObject(startVec, 3, rotVec, OwnerType.LEAFELEMENT, damage,transform.parent.gameObject);
+            else if (element.GetComponent<Element>().elementType == ElementType.LEAFROAD)
+                BulletManager.instance.GetObject(startVec, 3, rotVec, OwnerType.ROADLEAFELEMENT, damage, transform.parent.gameObject);
         }
 
         isAttack = true;

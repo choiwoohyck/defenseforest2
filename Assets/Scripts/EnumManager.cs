@@ -29,7 +29,8 @@ namespace EnumManagerSpace
         FIRE,
         ICE,
         ICEROAD,
-        LEAF
+        LEAF,
+        LEAFROAD
     };
 
     public enum MonsterType
@@ -64,6 +65,7 @@ namespace EnumManagerSpace
         ICEELEMENT,
         ROADICEELEMENT,
         LEAFELEMENT,
+        ROADLEAFELEMENT,
         ENEMY
     }
 }

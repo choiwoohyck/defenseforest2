@@ -41,6 +41,11 @@ public class Element : MonoBehaviour
             gameObject.GetComponent<UnitInfo>().StatusInit(50, 0.5f, 15);
         if (type == ElementType.LEAF)
             gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 100);
+        if (type == ElementType.LEAFROAD)
+        {
+            gameObject.GetComponent<UnitInfo>().StatusInit(50, 5f, 50);
+            transform.GetChild(1).gameObject.SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -95,12 +100,18 @@ public class Element : MonoBehaviour
                     TileMapManager.instance.changeBuildable(x, y);
                     if (TileMapManager.instance.isRoad())
                     {
-                        if (elementType == ElementType.ICE)
-                            elementType = ElementType.ICEROAD;
-
-                        AllyUnitManager.instance.allyUnits.Add(gameObject);
-                        isRoad = true;
+                    if (elementType == ElementType.ICE)
+                    {
+                        elementType = ElementType.ICEROAD;
                         animator.SetBool("isRoad", true);
+
+                    }
+
+                    if (elementType == ElementType.LEAF)
+                        elementType = ElementType.LEAFROAD;
+
+                    AllyUnitManager.instance.allyUnits.Add(gameObject);
+                        isRoad = true;
                     }
                     init(elementType);
                     AllyUnitManager.instance.noBuildElements.Remove(gameObject);
