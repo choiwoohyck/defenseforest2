@@ -37,7 +37,7 @@ public class ElementAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.parent.gameObject.GetComponent<Element>().isRoad && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.ICEROAD && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.LEAFROAD)
+        if (transform.parent.gameObject.GetComponent<Element>().isRoad && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.ICEROAD && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.LEAFROAD && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.STONE)
             return;
 
         attackTimer += Time.deltaTime;

@@ -157,6 +157,7 @@ GameObject:
   - component: {fileID: 3348833264266607096}
   - component: {fileID: 3348833264266607097}
   - component: {fileID: 3348833264266607100}
+  - component: {fileID: 688273221123489326}
   m_Layer: 11
   m_Name: Leaf
   m_TagString: Element
@@ -266,7 +267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 163e25e6624eec145882b9f520d792d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementType: 3
+  elementType: 2
   isBuilding: 0
   isDie: 0
   isRoad: 0
@@ -314,6 +315,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.24576552, y: 0.33698058}
   m_EdgeRadius: 0
+--- !u!114 &688273221123489326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3348833264266607099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542a2defca37be248864dbbcf212b243, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3952371893387186452
 PrefabInstance:
   m_ObjectHideFlags: 0

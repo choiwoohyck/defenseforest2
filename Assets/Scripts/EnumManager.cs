@@ -28,8 +28,9 @@ namespace EnumManagerSpace
     {
         FIRE,
         ICE,
-        ICEROAD,
         LEAF,
+        STONE,
+        ICEROAD,
         LEAFROAD
     };
 
@@ -55,7 +56,8 @@ namespace EnumManagerSpace
         FIREELEMENTHIT,
         FIREELEMENTEXPLOSION,
         ICICLE,
-        LEAFATTACK
+        LEAFATTACK,
+        GATHERINGENERGY
     };
 
     public enum OwnerType

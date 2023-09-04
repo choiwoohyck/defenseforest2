@@ -11,6 +11,9 @@ public class ShowBuildButton : MonoBehaviour
     public Button BuildUIButton;
     public Button FireElementButton;
     public Button IceElementButton;
+    public Button LeafElementButton;
+    public Button StoneElementButton;
+
 
     public Image SelectBorder;
 
@@ -28,6 +31,9 @@ public class ShowBuildButton : MonoBehaviour
 
         FireElementButton.onClick.AddListener(() => ElementButtonClick(0));
         IceElementButton.onClick.AddListener(() => ElementButtonClick(1));
+        LeafElementButton.onClick.AddListener(() => ElementButtonClick(2));
+        StoneElementButton.onClick.AddListener(() => ElementButtonClick(3));
+
 
     }
 
@@ -98,6 +104,14 @@ public class ShowBuildButton : MonoBehaviour
                 break;
             case 1:
                 SelectBorder.rectTransform.anchoredPosition = new Vector2(-289.2f, -18.4f);
+                break;
+
+            case 2:
+                SelectBorder.rectTransform.anchoredPosition = new Vector2(-205.2f, -18.4f);
+                break;
+
+            case 3:
+                SelectBorder.rectTransform.anchoredPosition = new Vector2(-129.2f, -18.4f);
                 break;
 
         }

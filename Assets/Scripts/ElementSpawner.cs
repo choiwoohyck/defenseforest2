@@ -57,6 +57,28 @@ public class ElementSpawner : MonoBehaviour
         }
     }
 
+    public void SpawnLeafElement()
+    {
+        if (!AllyUnitManager.instance.alreadyClick)
+        {
+            ClearNoBuildElement();
+            GameObject leaf = Instantiate(ElementPrefab[(int)ElementType.LEAF], transform.position, Quaternion.identity) as GameObject;
+            AllyUnitManager.instance.noBuildElements.Add(leaf);
+            AllyUnitManager.instance.alreadyClick = true;
+        }
+    }
+
+    public void SpawnStoneElement()
+    {
+        if (!AllyUnitManager.instance.alreadyClick)
+        {
+            ClearNoBuildElement();
+            GameObject leaf = Instantiate(ElementPrefab[(int)ElementType.STONE], transform.position, Quaternion.identity) as GameObject;
+            AllyUnitManager.instance.noBuildElements.Add(leaf);
+            AllyUnitManager.instance.alreadyClick = true;
+        }
+    }
+
 
     void ClearNoBuildElement()
     {

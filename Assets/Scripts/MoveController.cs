@@ -77,7 +77,7 @@ public class MoveController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
 
 
-        if (hit.transform.gameObject.tag == "Element")
+        if (hit.transform.gameObject.tag == "Element" && hit.transform.gameObject.GetComponent<Element>().elementType != ElementType.STONE)
         {
             GameObject selectElement = hit.transform.gameObject;
             selectElement.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = !selectElement.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled;

@@ -59,12 +59,16 @@ public class Element : MonoBehaviour
         if (gameObject.GetComponent<UnitInfo>().hp <= 0 && !isDie)
         {
             gameObject.transform.GetChild(0).GetComponent<ElementAttack>().isBuilding = false;
-            if (!isRoad)
+            isDie = true;
+        }
+
+        if (isDie)
+        {
+            renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, renderer.color.a - Time.deltaTime * 3f);
+            if (renderer.color.a<= 0)
             {
-                animator.SetBool("isDie", true);
                 StartCoroutine("Die");
-                isDie = true;
-            }
+            }    
         }
     }
 
@@ -81,16 +85,24 @@ public class Element : MonoBehaviour
       
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("¹¹³ë");
 
                 if (TileMapManager.instance.isBuild() && AllyUnitManager.instance.isBuild)
                 {
+                if (elementType == ElementType.STONE && TileMapManager.instance.isRoad()) return; 
+
                     transform.position = TileMapManager.instance.mapPostion() + new Vector3(0.5f, 0.5f);
                     isBuilding = true;
+
+                if (elementType != ElementType.STONE)
+                {
                     transform.GetChild(0).gameObject.GetComponent<ElementAttack>().isBuilding = true;
-                    renderer.material.color = originColor;
-                    //transform.GetChild(0).gameObject.SetActive(!transform.GetChild(0).gameObject.activeSelf);
                     transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                }
+                else
+                    GetComponent<CreateEnergyComponent>().startGathering = true;
+
+                    renderer.material.color = originColor;
+                 
 
                     int x = (int)TileMapManager.instance.mapPostion().x + 13;
                     int y = (int)(14 - TileMapManager.instance.mapPostion().y);
@@ -109,6 +121,8 @@ public class Element : MonoBehaviour
 
                     if (elementType == ElementType.LEAF)
                         elementType = ElementType.LEAFROAD;
+
+
 
                     AllyUnitManager.instance.allyUnits.Add(gameObject);
                         isRoad = true;
