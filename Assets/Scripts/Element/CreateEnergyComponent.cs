@@ -26,16 +26,15 @@ public class CreateEnergyComponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
-        if (!GetComponent<Element>().isBuilding || !startGathering)
+        if (!GetComponent<Element>().isBuilding || !startGathering || !GameManager.instance.isGameTurn)
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }
 
-        else if (startGathering && GetComponent<Element>().isBuilding)
+        else if (startGathering && GetComponent<Element>().isBuilding && GameManager.instance.isGameTurn)
             transform.GetChild(0).gameObject.SetActive(true);
 
+        if (!GameManager.instance.isGameTurn) return;
 
         if (timerStart)
             waitTimer += Time.deltaTime;

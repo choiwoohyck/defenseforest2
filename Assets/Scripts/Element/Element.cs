@@ -22,6 +22,8 @@ public class Element : MonoBehaviour
 
     public GameObject buildBorderPrefab;
     public Vector2 tileMapPos;
+    public int price = 100;
+
     void Start()
     {
         renderer = GetComponent<SpriteRenderer>();
@@ -34,16 +36,16 @@ public class Element : MonoBehaviour
     {
         elementType = type;
         if (type == ElementType.FIRE)
-            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.5f, 10);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.5f, 25);
         if (type == ElementType.ICE)
-            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.1f, 5);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.1f, 20);
         if (type == ElementType.ICEROAD)
-            gameObject.GetComponent<UnitInfo>().StatusInit(50, 0.5f, 15);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.5f, 20);
         if (type == ElementType.LEAF)
             gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 100);
         if (type == ElementType.LEAFROAD)
         {
-            gameObject.GetComponent<UnitInfo>().StatusInit(50, 5f, 50);
+            gameObject.GetComponent<UnitInfo>().StatusInit(50, 2.5f, 50);
             transform.GetChild(1).gameObject.SetActive(true);
         }
     }
@@ -133,7 +135,17 @@ public class Element : MonoBehaviour
                     Destroy(buildBorder);
                 }
             }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            GameManager.instance.energy += price;
+            AllyUnitManager.instance.noBuildElements.Remove(gameObject);
+            AllyUnitManager.instance.alreadyClick = false;
+            Destroy(buildBorder);
+            Destroy(gameObject);
         }
+            
+    }
 
     IEnumerator Die()
     {

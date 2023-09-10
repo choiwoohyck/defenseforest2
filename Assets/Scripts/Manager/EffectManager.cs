@@ -31,7 +31,6 @@ public class EffectManager : MonoBehaviour
 
     public void CreateEffect(EffectType type, Vector3 effectPos, Quaternion rotation)
     {
-        
         GameObject effect = Instantiate(EffectPrefab[(int)type]) as GameObject;
         effect.transform.position = effectPos;
         effect.transform.rotation = rotation;

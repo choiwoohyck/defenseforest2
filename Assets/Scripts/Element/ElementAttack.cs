@@ -99,15 +99,15 @@ public class ElementAttack : MonoBehaviour
             rotVec.Normalize();
 
             if (element.GetComponent<Element>().elementType == ElementType.ICE)
-                BulletManager.instance.GetObject(startVec, 15f, rotVec, OwnerType.ICEELEMENT, damage);
+                BulletManager.instance.GetObject(startVec, 20f, rotVec, OwnerType.ICEELEMENT, damage, target);
             else if (element.GetComponent<Element>().elementType == ElementType.FIRE)
-                BulletManager.instance.GetObject(startVec, 15f, rotVec, OwnerType.FIRELEMENT, damage);
+                BulletManager.instance.GetObject(startVec, 20f, rotVec, OwnerType.FIRELEMENT, damage, target);
             else if (element.GetComponent<Element>().elementType == ElementType.ICEROAD)
-                BulletManager.instance.GetObject(startVec, 15f, rotVec, OwnerType.ROADICEELEMENT, damage);
+                BulletManager.instance.GetObject(startVec, 20f, rotVec, OwnerType.ROADICEELEMENT, damage, target);
             else if (element.GetComponent<Element>().elementType == ElementType.LEAF)
-                BulletManager.instance.GetObject(startVec, 3, rotVec, OwnerType.LEAFELEMENT, damage,transform.parent.gameObject);
+                BulletManager.instance.GetObject(startVec, 20, rotVec, OwnerType.LEAFELEMENT, damage,target,transform.parent.gameObject);
             else if (element.GetComponent<Element>().elementType == ElementType.LEAFROAD)
-                BulletManager.instance.GetObject(startVec, 3, rotVec, OwnerType.ROADLEAFELEMENT, damage, transform.parent.gameObject);
+                BulletManager.instance.GetObject(startVec, 7, rotVec, OwnerType.ROADLEAFELEMENT, damage, target, transform.parent.gameObject);
         }
 
         isAttack = true;

@@ -67,7 +67,7 @@ public class MoveController : MonoBehaviour
         yPos = Mathf.Clamp(yPos, -2.5f, 15.4f);
 
         rigidbody2D.MovePosition(rigidbody2D.position + movement * movementSpeed * Time.fixedDeltaTime);
-        transform.position = new Vector3(xPos, yPos, transform.position.z);
+        //transform.position = new Vector3(xPos, yPos, transform.position.z);
 
     }
 
@@ -96,7 +96,7 @@ public class MoveController : MonoBehaviour
             Vector2 startVec = new Vector2(transform.position.x, transform.position.y);
 
 
-            BulletManager.instance.GetObject(startVec, 10f, rotVec, OwnerType.PLAYER,PlayerInfo.Instance.playerDamage);
+            BulletManager.instance.GetObject(startVec, 10f, rotVec, OwnerType.PLAYER,PlayerInfo.Instance.playerDamage,null);
 
             shootTime = 0;
         }
@@ -121,7 +121,6 @@ public class MoveController : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-
-        rigidbody2D.velocity = Vector2.zero;
+        //rigidbody2D.velocity = Vector2.zero;
     }
 }

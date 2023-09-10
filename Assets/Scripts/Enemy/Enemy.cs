@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
         {
             attackDistance = 1.0f;
             damage = 10;
-            hp = 50;
+            hp = 75;
             moveSpeed = 3f;
         }
 
@@ -338,7 +338,7 @@ public class Enemy : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            
+
             collision.gameObject.GetComponent<UnitInfo>().hp -= damage;
             collision.gameObject.GetComponent<HitObject>().ChangeColor();
             collider2D.isTrigger = true;
@@ -353,6 +353,19 @@ public class Enemy : MonoBehaviour
         }
 
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+
+            collision.gameObject.GetComponent<UnitInfo>().hp -= damage;
+            collision.gameObject.GetComponent<HitObject>().ChangeColor();
+            hp = 0;
+        }
+    }
+
 
 
     bool InCamera()

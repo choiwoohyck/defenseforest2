@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -11,15 +12,20 @@ public class UIManager : MonoBehaviour
     [HideInInspector]
     public static UIManager instance;
 
+    public GameObject energyText;
     public Image fadeImg; // fade에 쓸 이미지
+    public Image DayBarFillImage;
+    public Image DayBarImage;
     public float fadeTime; //화면이 변할 시간
     public bool fadeout;
+
+    
 
     float changeTimer = 0f;
     public bool changeTimerOn = false;
     public bool fadein;
 
-    private void Awake()
+    private void Awake() 
     {
         instance = this;
     }
@@ -61,9 +67,9 @@ public class UIManager : MonoBehaviour
                 fadeout = true;
                 changeTimer = 0;
                 changeTimerOn = false;
+                GameManager.instance.isGameTurn = true;
             }
         }
-
 
         if (fadeout)
         {
@@ -75,14 +81,16 @@ public class UIManager : MonoBehaviour
             {
                 fadeout = false;
                 fadeImg.gameObject.SetActive(false);
+                GameManager.instance.Stage++;
             }
-
         }
 
+        if (GameManager.instance.isGameTurn)
+        {
+            DayBarImage.gameObject.SetActive(true);
+            DayBarFillImage.fillAmount = (60 - StageManager.instance.gameTime) / 60;
+        }
 
+        energyText.GetComponent<TextMeshProUGUI>().text = GameManager.instance.energy.ToString();
     }
-
-    
-
-    
 }

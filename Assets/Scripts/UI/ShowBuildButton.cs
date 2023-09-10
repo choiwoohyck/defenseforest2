@@ -22,7 +22,7 @@ public class ShowBuildButton : MonoBehaviour
     RectTransform buttonRectTransform;
 
     
-    bool up = true;
+    public bool up = true;
 
     void Start()
     {

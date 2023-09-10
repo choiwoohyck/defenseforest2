@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class BattlePopUp : MonoBehaviour
@@ -77,7 +78,11 @@ public class BattlePopUp : MonoBehaviour
     {
         ActiveBackground(false);
         battlePopUpUI.SetActive(false);
-        buildUI.GetComponent<ShowBuildButton>().BuildButtonClick();
+
+        if(buildUI.GetComponent<ShowBuildButton>().up)
+            buildUI.GetComponent<ShowBuildButton>().BuildButtonClick();
+
+        buildUI.gameObject.transform.GetChild(0).gameObject.SetActive(false);
         UIManager.instance.fadeImg.gameObject.SetActive(true);
         UIManager.instance.changeTimerOn = true;
         battlePopUpButton.SetActive(false);

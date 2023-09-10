@@ -8,11 +8,13 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public static GameManager instance;
 
-    public float energy = 0;
     public bool gameOver = false;
     public bool isGameTurn = false;
     public bool inActiveBuildButton = false;
 
+    public int energy = 1000;
+
+    public int Stage = 0;
 
     private void Awake()
     {
@@ -26,7 +28,7 @@ public class GameManager : MonoBehaviour
 
     void init()
     {
-        energy = 0;
+        energy = 1000;
     }
 
     // Update is called once per frame

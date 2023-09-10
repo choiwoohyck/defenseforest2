@@ -28,6 +28,7 @@ public class Bullet : MonoBehaviour
     bool isHit = false;
 
     GameObject owner;
+    GameObject target;
 
 
     // Start is called before the first frame update
@@ -46,19 +47,26 @@ public class Bullet : MonoBehaviour
         {
             float bulletAngle = (transform.rotation.z+180) * Mathf.Deg2Rad;
 
-            bulletDirection = new Vector2(Mathf.Cos(bulletAngle),Mathf.Sin(bulletAngle));
-             
+            //if (target == null)
+            //    bulletDirection = new Vector2(Mathf.Cos(bulletAngle), Mathf.Sin(bulletAngle));
+            //else
+            //{
+            //    bulletDirection = target.transform.position - transform.position;
+            //    bulletDirection.Normalize();
+            //}
+            bulletDirection = new Vector2(Mathf.Cos(bulletAngle), Mathf.Sin(bulletAngle));
             transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
         }
     }
 
-    public void Init(Vector2 b_stratPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type,float b_damage)
+    public void Init(Vector2 b_stratPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type,float b_damage,GameObject b_target)
     {
         transform.position = b_stratPos;
         bulletSpeed = b_Speed;
         rotVec = b_rotVec;
         type = o_type;
         damage = b_damage;
+        target = b_target;
         transform.rotation = Quaternion.Euler(0,0,Mathf.Atan2(rotVec.y,rotVec.x) * Mathf.Rad2Deg + 180);
     }
 

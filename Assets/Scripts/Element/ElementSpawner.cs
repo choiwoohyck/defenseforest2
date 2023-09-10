@@ -37,10 +37,14 @@ public class ElementSpawner : MonoBehaviour
     }
     public void SpawnFireElement()
     {
+        if (GameManager.instance.energy < 100) return;
+
         if (!AllyUnitManager.instance.alreadyClick)
         {
+            GameManager.instance.energy -= 100;
             ClearNoBuildElement();
             GameObject fire = Instantiate(ElementPrefab[(int)ElementType.FIRE], transform.position, Quaternion.identity) as GameObject;
+            fire.GetComponent<Element>().price = 100;
             AllyUnitManager.instance.noBuildElements.Add(fire);
             AllyUnitManager.instance.alreadyClick = true;
         }
@@ -48,10 +52,14 @@ public class ElementSpawner : MonoBehaviour
 
     public void SpawnIceElement()
     {
+        if (GameManager.instance.energy < 150) return;
+
         if (!AllyUnitManager.instance.alreadyClick)
         {
+            GameManager.instance.energy -= 150;
             ClearNoBuildElement();
             GameObject ice = Instantiate(ElementPrefab[(int)ElementType.ICE], transform.position, Quaternion.identity) as GameObject;
+            ice.GetComponent<Element>().price = 150;
             AllyUnitManager.instance.noBuildElements.Add(ice);
             AllyUnitManager.instance.alreadyClick = true;
         }
@@ -59,10 +67,14 @@ public class ElementSpawner : MonoBehaviour
 
     public void SpawnLeafElement()
     {
+        if (GameManager.instance.energy < 200) return;
+
         if (!AllyUnitManager.instance.alreadyClick)
         {
+            GameManager.instance.energy -= 200;
             ClearNoBuildElement();
             GameObject leaf = Instantiate(ElementPrefab[(int)ElementType.LEAF], transform.position, Quaternion.identity) as GameObject;
+            leaf.GetComponent<Element>().price = 200;
             AllyUnitManager.instance.noBuildElements.Add(leaf);
             AllyUnitManager.instance.alreadyClick = true;
         }
@@ -70,11 +82,15 @@ public class ElementSpawner : MonoBehaviour
 
     public void SpawnStoneElement()
     {
+        if (GameManager.instance.energy < 200) return;
+
         if (!AllyUnitManager.instance.alreadyClick)
         {
+            GameManager.instance.energy -= 200;
             ClearNoBuildElement();
-            GameObject leaf = Instantiate(ElementPrefab[(int)ElementType.STONE], transform.position, Quaternion.identity) as GameObject;
-            AllyUnitManager.instance.noBuildElements.Add(leaf);
+            GameObject stone = Instantiate(ElementPrefab[(int)ElementType.STONE], transform.position, Quaternion.identity) as GameObject;
+            stone.GetComponent<Element>().price = 200;
+            AllyUnitManager.instance.noBuildElements.Add(stone);
             AllyUnitManager.instance.alreadyClick = true;
         }
     }

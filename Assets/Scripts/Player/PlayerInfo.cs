@@ -8,7 +8,7 @@ public class PlayerInfo : MonoBehaviour
 
     public static PlayerInfo Instance;
     public float money = 0;
-    public float playerDamage = 10;
+    public float playerDamage = 50;
 
     void Start()
     {
@@ -20,7 +20,7 @@ public class PlayerInfo : MonoBehaviour
     {
       
         money = 0;
-        gameObject.GetComponent<UnitInfo>().StatusInit(100, 1, 10);
+        gameObject.GetComponent<UnitInfo>().StatusInit(100, 1, 50);
         AllyUnitManager.instance.allyUnits.Add(transform.gameObject);
 
     }

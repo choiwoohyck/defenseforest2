@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EnumManagerSpace;
+using UnityEngine.Rendering;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class EnemySpawner : MonoBehaviour
     public GameObject FrankStein;
 
     public GameObject[] spawnPosition;
+
+    float spawnTimer = 0;
+    public float maxSpawnTimer = 2f;
     void Start()
     {
     }
@@ -34,6 +38,37 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
+
+        if (GameManager.instance.isGameTurn)
+        {
+            spawnTimer += Time.deltaTime;
+
+            if (GameManager.instance.Stage == 1)
+            {
+                if (spawnTimer >= maxSpawnTimer)
+                {
+                    
+                     for (int i = 0; i < 4; i++)
+                     {
+                         int random = Random.Range(0, 2);
+                        if (random == 1)
+                        {
+                            GameObject Enemy = Instantiate(FrankStein) as GameObject;
+                            Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                            Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
+                        }
+                        else
+                        {
+                            GameObject Enemy = Instantiate(Zombie) as GameObject;
+                            Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                            Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
+                        }
+                     }
+
+                    spawnTimer = 0;
+                }
+            }
+        }
        
     }
 }

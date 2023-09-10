@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3348833263990062867}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 4}
+  m_LocalScale: {x: 3, y: 3, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3348833264266607101}
@@ -273,6 +273,7 @@ MonoBehaviour:
   isRoad: 0
   buildBorderPrefab: {fileID: 3774014132962163947, guid: de5ef531c81442b489518b32e615ab86, type: 3}
   tileMapPos: {x: 0, y: 0}
+  price: 100
 --- !u!114 &3348833264266607097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,7 +303,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.011595167, y: -0.0046380535}
+  m_Offset: {x: 0.011595167, y: -0.01614917}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -313,7 +314,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.24576552, y: 0.33698058}
+  m_Size: {x: 0.24576552, y: 0.27855253}
   m_EdgeRadius: 0
 --- !u!114 &688273221123489326
 MonoBehaviour:
