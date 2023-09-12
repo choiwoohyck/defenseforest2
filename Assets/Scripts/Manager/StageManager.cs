@@ -9,6 +9,8 @@ public class StageManager : MonoBehaviour
     public static StageManager instance;
 
     public GameObject GlobalLight;
+    
+    
     public float gameTime = 0;
     // Start is called before the first frame update
 
@@ -35,6 +37,7 @@ public class StageManager : MonoBehaviour
         if (gameTime >= 60)
         {
             GameManager.instance.isGameTurn = false;
+            ChangeDay();
             gameTime = 0;
         }
     }
@@ -42,5 +45,27 @@ public class StageManager : MonoBehaviour
     public void ChangeNight()
     {
         GlobalLight.GetComponent<Light2D>().color = new Color(15/255f, 15/255f, 15/255f);
+    }
+
+    public void ChangeDay()
+    {
+        GameManager.instance.spawner.stop = true;
+
+        foreach (var enemy in EnemyUnitManager.instance.enemyUnits)
+        {
+            enemy.GetComponent<Enemy>().hp = 0;
+        }
+
+        GlobalLight.GetComponent<Light2D>().color = new Color(1,1,1);
+        GameManager.instance.inActiveBuildButton = false;
+        UIManager.instance.DayBarImage.gameObject.SetActive(false);
+        UIManager.instance.buildButton.SetActive(true);
+        
+        if (!UIManager.instance.BuildPopupUI.GetComponent<ShowBuildButton>().up)
+        {
+            UIManager.instance.BuildPopupUI.GetComponent<ShowBuildButton>().BuildButtonClick();
+        }
+
+        UIManager.instance.battleButton.SetActive(true);
     }
 }

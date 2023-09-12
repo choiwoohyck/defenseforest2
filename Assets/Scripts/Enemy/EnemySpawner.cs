@@ -14,6 +14,7 @@ public class EnemySpawner : MonoBehaviour
 
     float spawnTimer = 0;
     public float maxSpawnTimer = 2f;
+    public bool stop = false;
     void Start()
     {
     }
@@ -21,6 +22,8 @@ public class EnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (stop) return;
+
         if (Input.GetKeyDown(KeyCode.Z))
         {
             for (int i = 0; i < 4; i++)
@@ -50,20 +53,36 @@ public class EnemySpawner : MonoBehaviour
                     
                      for (int i = 0; i < 4; i++)
                      {
-                         int random = Random.Range(0, 2);
-                        if (random == 1)
-                        {
-                            GameObject Enemy = Instantiate(FrankStein) as GameObject;
-                            Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
-                            Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
-                        }
-                        else
-                        {
-                            GameObject Enemy = Instantiate(Zombie) as GameObject;
-                            Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
-                            Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
-                        }
+                       
+                          GameObject Enemy = Instantiate(Zombie) as GameObject;
+                          Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                          Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                      }
+
+                    spawnTimer = 0;
+                }
+            }
+
+            if (GameManager.instance.Stage == 2)
+            {
+                if (spawnTimer >= maxSpawnTimer)
+                {
+
+                    for (int i = 0; i < 4; i++)
+                    {
+
+                        GameObject Enemy = Instantiate(Zombie) as GameObject;
+                        Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
+                    }
+
+                    for (int i = 4; i < 8; i++)
+                    {
+
+                        GameObject Enemy = Instantiate(Zombie) as GameObject;
+                        Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
+                    }
 
                     spawnTimer = 0;
                 }

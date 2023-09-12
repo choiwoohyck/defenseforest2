@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
 
     bool isAttack = false;
     bool isRush = false;
+    bool noEnergy = false;
 
 
     float searchTimer = 0;
@@ -70,7 +71,7 @@ public class Enemy : MonoBehaviour
         EnterState(state);
         rigidbody2D = GetComponent<Rigidbody2D>();
         collider2D = GetComponent<BoxCollider2D>();
-        //EnemyUnitManager.instance.enemyUnits.Add(gameObject);
+        EnemyUnitManager.instance.enemyUnits.Add(gameObject);
     }
 
     // Update is called once per frame
@@ -284,6 +285,7 @@ public class Enemy : MonoBehaviour
             if (target == GameObject.Find("MagicStone"))
             {
                 target.GetComponent<UnitInfo>().hp -= damage;
+                noEnergy = true;
                 hp = 0;
                 isAttack = true;
                 collider2D.isTrigger = true;
@@ -311,7 +313,8 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
 
-
+        GameManager.instance.energy += 10;
+        EnemyUnitManager.instance.enemyUnits.Remove(gameObject);
         Destroy(gameObject);
     }
 
@@ -342,6 +345,7 @@ public class Enemy : MonoBehaviour
             collision.gameObject.GetComponent<UnitInfo>().hp -= damage;
             collision.gameObject.GetComponent<HitObject>().ChangeColor();
             collider2D.isTrigger = true;
+            noEnergy = true;
             hp = 0;
         }
 

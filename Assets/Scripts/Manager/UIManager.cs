@@ -13,13 +13,16 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public GameObject energyText;
+    public GameObject buildButton;
+    public GameObject battleButton;
+
     public Image fadeImg; // fade에 쓸 이미지
     public Image DayBarFillImage;
     public Image DayBarImage;
     public float fadeTime; //화면이 변할 시간
     public bool fadeout;
 
-    
+    public GameObject BuildPopupUI;
 
     float changeTimer = 0f;
     public bool changeTimerOn = false;
@@ -81,6 +84,7 @@ public class UIManager : MonoBehaviour
             {
                 fadeout = false;
                 fadeImg.gameObject.SetActive(false);
+                GameManager.instance.spawner.stop = false;
                 GameManager.instance.Stage++;
             }
         }

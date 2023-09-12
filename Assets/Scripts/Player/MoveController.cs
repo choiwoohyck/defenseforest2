@@ -33,6 +33,9 @@ public class MoveController : MonoBehaviour
         {
             ClickElement();
         }
+
+        if (Input.GetKey(KeyCode.F1))
+            StageManager.instance.gameTime = 60;
     }
 
     private void FixedUpdate()

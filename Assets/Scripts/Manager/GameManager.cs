@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public static GameManager instance;
 
+    public EnemySpawner spawner;
+
     public bool gameOver = false;
     public bool isGameTurn = false;
     public bool inActiveBuildButton = false;
