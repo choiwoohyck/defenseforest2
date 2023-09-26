@@ -170,5 +170,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletSpeed: 5
   bulletAngle: 0
-  damage: 15
+  damage: 20
   type: 3

@@ -98,16 +98,32 @@ public class ElementAttack : MonoBehaviour
 
             rotVec.Normalize();
 
+            OwnerType type = OwnerType.ICEELEMENT;
+            float speed = 20f;
+
             if (element.GetComponent<Element>().elementType == ElementType.ICE)
-                BulletManager.instance.GetObject(startVec, 20f, rotVec, OwnerType.ICEELEMENT, damage, target);
+            {
+                type = OwnerType.ICEELEMENT;
+            }
             else if (element.GetComponent<Element>().elementType == ElementType.FIRE)
-                BulletManager.instance.GetObject(startVec, 20f, rotVec, OwnerType.FIRELEMENT, damage, target);
+            {
+                type = OwnerType.FIRELEMENT;
+            }
             else if (element.GetComponent<Element>().elementType == ElementType.ICEROAD)
-                BulletManager.instance.GetObject(startVec, 20f, rotVec, OwnerType.ROADICEELEMENT, damage, target);
+            {
+                type = OwnerType.ROADICEELEMENT;
+            }
             else if (element.GetComponent<Element>().elementType == ElementType.LEAF)
-                BulletManager.instance.GetObject(startVec, 20, rotVec, OwnerType.LEAFELEMENT, damage,target,transform.parent.gameObject);
+            {
+                type = OwnerType.LEAFELEMENT;
+            }
             else if (element.GetComponent<Element>().elementType == ElementType.LEAFROAD)
-                BulletManager.instance.GetObject(startVec, 7, rotVec, OwnerType.ROADLEAFELEMENT, damage, target, transform.parent.gameObject);
+            {
+                type = OwnerType.ROADLEAFELEMENT;
+                speed = 7f;
+            }
+
+            GameObject bullet = BulletManager.instance.GetPooledObject(startVec, speed, rotVec, type, damage, target, transform.parent.gameObject);
         }
 
         isAttack = true;

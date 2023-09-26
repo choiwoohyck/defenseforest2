@@ -114,24 +114,31 @@ public class Element : MonoBehaviour
                     TileMapManager.instance.changeBuildable(x, y);
                     if (TileMapManager.instance.isRoad())
                     {
-                    if (elementType == ElementType.ICE)
-                    {
-                        elementType = ElementType.ICEROAD;
-                        animator.SetBool("isRoad", true);
+                        if (elementType == ElementType.ICE)
+                        {
+                            elementType = ElementType.ICEROAD;
+                            animator.SetBool("isRoad", true);
 
+                        }
+
+                        if (elementType == ElementType.LEAF)
+                            elementType = ElementType.LEAFROAD;
+
+
+
+                        AllyUnitManager.instance.allyUnits.Add(gameObject);
+                            isRoad = true;
                     }
 
-                    if (elementType == ElementType.LEAF)
-                        elementType = ElementType.LEAFROAD;
-
-
-
-                    AllyUnitManager.instance.allyUnits.Add(gameObject);
-                        isRoad = true;
-                    }
+                if (elementType != ElementType.STONE)
+                {
                     init(elementType);
+                    transform.GetChild(0).gameObject.GetComponent<ElementAttack>().damage = GetComponent<UnitInfo>().damage;
+                }
+
                     AllyUnitManager.instance.noBuildElements.Remove(gameObject);
                     AllyUnitManager.instance.alreadyClick = false;
+                    AudioManager.instance.PlayOnShotSFX(3);
                     Destroy(buildBorder);
                 }
             }
@@ -141,6 +148,7 @@ public class Element : MonoBehaviour
             GameManager.instance.energy += price;
             AllyUnitManager.instance.noBuildElements.Remove(gameObject);
             AllyUnitManager.instance.alreadyClick = false;
+            AudioManager.instance.PlayOnShotSFX(2);
             Destroy(buildBorder);
             Destroy(gameObject);
         }

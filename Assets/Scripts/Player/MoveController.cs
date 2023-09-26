@@ -7,6 +7,10 @@ public class MoveController : MonoBehaviour
 
     public float movementSpeed = 2.5f;
     float shootTime = 0;
+    float teleportTimer = 0;
+
+    bool isTeleport = false;
+
     Vector2 movement = new Vector2();
     Vector2 moveDir = new Vector2();
     Rigidbody2D rigidbody2D;
@@ -25,7 +29,7 @@ public class MoveController : MonoBehaviour
     {
         rigidbody2D.velocity = Vector3.zero;
         rigidbody2D.angularVelocity = 0;
-
+        teleportTimer += Time.deltaTime;
         UpdateState();
         Shoot();
 
@@ -36,6 +40,8 @@ public class MoveController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.F1))
             StageManager.instance.gameTime = 60;
+
+        
     }
 
     private void FixedUpdate()
@@ -45,17 +51,23 @@ public class MoveController : MonoBehaviour
 
     private void MoveCharacter()
     {
+        
 
-
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) 
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow)) 
         {
             moveDir.x = Input.GetAxisRaw("Horizontal");
             moveDir.y = Input.GetAxisRaw("Vertical");
 
+            AudioManager.instance.PlayOnShotWALKSFX();
             moveDir.Normalize();
+
+            if (Input.GetKeyDown(KeyCode.LeftShift) && teleportTimer >= 1.5f)
+            {
+                Teleport(moveDir);
+                GetComponent<UnitInfo>().isInvincible = true;
+                teleportTimer = 0;
+            }
         }
-
-
 
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
@@ -88,6 +100,19 @@ public class MoveController : MonoBehaviour
         }
     }
 
+    private void Teleport(Vector2 teleportDir)
+    {
+
+        float xPos = transform.position.x+teleportDir.x;
+        float yPos = transform.position.y+teleportDir.y;
+
+        xPos = Mathf.Clamp(xPos, -12.8f, 12.8f);
+        yPos = Mathf.Clamp(yPos, -2.5f, 15.4f);
+
+        transform.position = new Vector3(xPos, yPos, transform.position.z);
+        EffectManager.instance.CreateEffect(EffectType.TELEPORT, transform.position, transform.rotation);
+    }
+
     private void Shoot()
     {
         shootTime += Time.deltaTime;
@@ -99,8 +124,8 @@ public class MoveController : MonoBehaviour
             Vector2 startVec = new Vector2(transform.position.x, transform.position.y);
 
 
-            BulletManager.instance.GetObject(startVec, 10f, rotVec, OwnerType.PLAYER,PlayerInfo.Instance.playerDamage,null);
-
+            GameObject Bullet =  BulletManager.instance.GetPooledObject(startVec, 10f, rotVec, OwnerType.PLAYER,PlayerInfo.Instance.playerDamage,null);
+            AudioManager.instance.PlayOnShotSFX(0);
             shootTime = 0;
         }
 

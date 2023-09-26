@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ public class ShowBuildButton : MonoBehaviour
 {
     // Start is called before the first frame update
 
+    [Header ("생성 버튼들")]
     public Button BuildUIButton;
     public Button FireElementButton;
     public Button IceElementButton;
@@ -21,7 +23,18 @@ public class ShowBuildButton : MonoBehaviour
     RectTransform rectTransform;
     RectTransform buttonRectTransform;
 
-    
+    [Header("설명 UI")]
+    public GameObject DescriptionUI;
+    public TextMeshProUGUI DescriptionName;
+    public Image DescriptionImage;
+    public TextMeshProUGUI DescriptionDamage;
+    public TextMeshProUGUI DescriptionHP;
+    public TextMeshProUGUI Description1;
+    public TextMeshProUGUI Description2;
+    public Sprite[] DescriptionImages;
+
+
+
     public bool up = true;
 
     void Start()
@@ -47,9 +60,16 @@ public class ShowBuildButton : MonoBehaviour
     {
         if (GameManager.instance.inActiveBuildButton) return;
 
+        AudioManager.instance.PlayOnShotSFX(2);
+
         StartCoroutine("BuildUIUpDown");
 
         Debug.Log(rectTransform.position.y);
+    }
+
+    public void OnMouseBuildButton()
+    {
+
     }
 
 
@@ -96,28 +116,78 @@ public class ShowBuildButton : MonoBehaviour
 
     }
 
-    void ElementButtonClick(int order)
+    public void ElementButtonClick(int order)
     {
+        AudioManager.instance.PlayOnShotSFX(2);
 
         switch(order)
         {
             case 0:
-                SelectBorder.rectTransform.anchoredPosition = new Vector2(-371.2f, -18.4f);
+                SelectBorder.rectTransform.anchoredPosition = new Vector2(-374.1f, -18.4f);
                 break;
             case 1:
-                SelectBorder.rectTransform.anchoredPosition = new Vector2(-289.2f, -18.4f);
+                SelectBorder.rectTransform.anchoredPosition = new Vector2(-290.4f, -18.4f);
                 break;
 
             case 2:
-                SelectBorder.rectTransform.anchoredPosition = new Vector2(-205.2f, -18.4f);
+                SelectBorder.rectTransform.anchoredPosition = new Vector2(-204.2f, -18.4f);
                 break;
 
             case 3:
-                SelectBorder.rectTransform.anchoredPosition = new Vector2(-129.2f, -18.4f);
+                SelectBorder.rectTransform.anchoredPosition = new Vector2(-118.8f, -18.4f);
                 break;
 
         }
 
-
     }
+
+    public void OnMouseEnterFireButton()
+    {
+        DescriptionUI.SetActive(true);
+        DescriptionName.text = "불꽃 정령";
+        DescriptionImage.sprite = DescriptionImages[0];
+        DescriptionDamage.text = "25";
+        DescriptionHP.text = "100";
+        Description1.text = "불꽃을 뱉어 적을 공격합니다.";
+        Description2.text = "체력이 다하면 폭발합니다.";
+    }
+
+    public void OnMouseEnterICEButton()
+    {
+        DescriptionUI.SetActive(true);
+        DescriptionName.text = "얼음 정령";
+        DescriptionImage.sprite = DescriptionImages[1];
+        DescriptionDamage.text = "20";
+        DescriptionHP.text = "100";
+        Description1.text = "일정 이상 공격하면 적을 얼립니다.";
+        Description2.text = "적을 관통하는 얼음창을 날립니다.";
+    }
+
+    public void OnMouseEnterLeafButton()
+    {
+        DescriptionUI.SetActive(true);
+        DescriptionName.text = "풀 정령";
+        DescriptionImage.sprite = DescriptionImages[2];
+        DescriptionDamage.text = "50";
+        DescriptionHP.text = "100";
+        Description1.text = "적에게 돌진합니다..";
+        Description2.text = "독안개를 설치하고 공격합니다.";
+    }
+
+    public void OnMouseEnterStoneButton()
+    {
+        DescriptionUI.SetActive(true);
+        DescriptionName.text = "바위 정령";
+        DescriptionImage.sprite = DescriptionImages[3];
+        DescriptionDamage.text = "0";
+        DescriptionHP.text = "0";
+        Description1.text = "플레이 턴에 공격을 못하는 대신에";
+        Description2.text = "5초에 10에너지를 획득합니다.";
+    }
+
+    public void ExitMouseBuildButton()
+    {
+        DescriptionUI.SetActive(false);
+    }
+
 }

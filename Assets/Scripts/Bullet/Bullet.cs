@@ -74,7 +74,8 @@ public class Bullet : MonoBehaviour
     //{
     //    if (collision.gameObject.CompareTag("Enemy"))
     //    {
-    //        collision.gameObject.GetComponent<Enemy>().hp -= PlayerInfo.Instance.playerDamage;
+    //        collision.gameObject.GetComponent<Enemy>().hp -= Player
+    //        .Instance.playerDamage;
     //        //animator.SetBool("isHit", true);
     //        //isHit = true;
     //        //collider2D.isTrigger = true;
@@ -117,20 +118,31 @@ public class Bullet : MonoBehaviour
             }
 
             if (type != OwnerType.ROADICEELEMENT || type == OwnerType.ROADLEAFELEMENT)
-                Destroy(gameObject);
+                BulletManager.instance.ReturnObject(gameObject);
 
             collision.gameObject.GetComponent<HitObject>().ChangeColor();
         }
 
         if (collision.gameObject.CompareTag("Wall"))
         {
-           
-            Destroy(gameObject);
+
+            BulletManager.instance.ReturnObject(gameObject);
             if (type == OwnerType.PLAYER)
                 EffectManager.instance.CreateEffect(EffectType.BULLET1HITWALL, transform.position, transform.rotation);
             if (type == OwnerType.ROADICEELEMENT)
                 EffectManager.instance.CreateEffect(EffectType.ICICLE, transform.position, transform.rotation);
 
+        }
+
+        if (collision.gameObject.CompareTag("Boss"))
+        {
+            collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
+
+            if (type == OwnerType.PLAYER)
+                EffectManager.instance.CreateEffect(EffectType.BULLET1HIT, transform.position, transform.rotation);
+
+            collision.gameObject.GetComponent<HitObject>().ChangeColor();
+            BulletManager.instance.ReturnObject(gameObject);
         }
     }
 

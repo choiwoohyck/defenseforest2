@@ -10,6 +10,9 @@ public class UnitInfo : MonoBehaviour
     public float hp = 100;
     public float maxHp = 100;
     public float damage;
+    public bool isInvincible = false;
+
+    bool invincibleTimerOn = false;
 
 
     void Start()
@@ -34,6 +37,26 @@ public class UnitInfo : MonoBehaviour
 
     public void DecreaseHP(float damage)
     {
-        hp -= damage;
+        if (isInvincible)
+        {
+            invincibleTimerOn = true;
+
+            if (invincibleTimerOn)
+                StartCoroutine("InvincibleOff");
+        }
+
+        else
+        {
+            isInvincible = true;
+            GetComponent<HitObject>().ChangeColor();
+            hp -= damage;
+        }
+    }
+
+    IEnumerator InvincibleOff()
+    {
+        invincibleTimerOn = false;
+        yield return new WaitForSeconds(0.5f);
+        isInvincible = false;
     }
 }

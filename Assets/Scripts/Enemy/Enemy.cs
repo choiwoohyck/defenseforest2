@@ -24,10 +24,11 @@ public class Enemy : MonoBehaviour
     public float attackDistance = 1f;
     public bool isDead = false;
     public bool isFrozen = false;
+    public bool noEnergy = false;
+
 
     bool isAttack = false;
     bool isRush = false;
-    bool noEnergy = false;
 
 
     float searchTimer = 0;
@@ -313,7 +314,9 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
 
-        GameManager.instance.energy += 10;
+        if (!noEnergy)
+            GameManager.instance.energy += 10;
+
         EnemyUnitManager.instance.enemyUnits.Remove(gameObject);
         Destroy(gameObject);
     }
@@ -342,8 +345,7 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
 
-            collision.gameObject.GetComponent<UnitInfo>().hp -= damage;
-            collision.gameObject.GetComponent<HitObject>().ChangeColor();
+            collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
             collider2D.isTrigger = true;
             noEnergy = true;
             hp = 0;
@@ -364,7 +366,7 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
 
-            collision.gameObject.GetComponent<UnitInfo>().hp -= damage;
+            collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
             collision.gameObject.GetComponent<HitObject>().ChangeColor();
             hp = 0;
         }

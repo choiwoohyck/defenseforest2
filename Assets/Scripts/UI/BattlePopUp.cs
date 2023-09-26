@@ -65,20 +65,21 @@ public class BattlePopUp : MonoBehaviour
     {
         ActiveBackground(false);
         battlePopUpUI.SetActive(false);
+        AudioManager.instance.PlayOnShotSFX(2);
     }
 
     public void ClickBattleButton()
     {
         ActiveBackground(true);
         battlePopUpUI.SetActive(true);
-
+        AudioManager.instance.PlayOnShotSFX(2);
     }
 
     public void ClickYesButton()
     {
         ActiveBackground(false);
         battlePopUpUI.SetActive(false);
-
+        AudioManager.instance.PlayOnShotSFX(2);
         if(buildUI.GetComponent<ShowBuildButton>().up)
             buildUI.GetComponent<ShowBuildButton>().BuildButtonClick();
 
@@ -86,6 +87,7 @@ public class BattlePopUp : MonoBehaviour
         UIManager.instance.fadeImg.gameObject.SetActive(true);
         UIManager.instance.changeTimerOn = true;
         battlePopUpButton.SetActive(false);
+        AudioManager.instance.StopBGM();
     }
 
 

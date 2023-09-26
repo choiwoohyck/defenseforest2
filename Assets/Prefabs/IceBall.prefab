@@ -149,7 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletSpeed: 3
   bulletAngle: 0
-  damage: 5
+  damage: 20
   type: 2
 --- !u!50 &2293076976451771823
 Rigidbody2D:

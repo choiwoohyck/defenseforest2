@@ -49,6 +49,12 @@ namespace EnumManagerSpace
         READY
     };
 
+    public enum MiddleBossState
+    {
+        IDLE,
+        LASER
+    }
+
     public enum EffectType
     {
         BULLET1HIT,
@@ -57,7 +63,8 @@ namespace EnumManagerSpace
         FIREELEMENTEXPLOSION,
         ICICLE,
         LEAFATTACK,
-        GATHERINGENERGY
+        GATHERINGENERGY,
+        TELEPORT
     };
 
     public enum OwnerType

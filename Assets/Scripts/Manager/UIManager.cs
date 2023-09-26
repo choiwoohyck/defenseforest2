@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     public bool fadeout;
 
     public GameObject BuildPopupUI;
+    public GameObject clearUI;
 
     float changeTimer = 0f;
     public bool changeTimerOn = false;
@@ -86,6 +87,7 @@ public class UIManager : MonoBehaviour
                 fadeImg.gameObject.SetActive(false);
                 GameManager.instance.spawner.stop = false;
                 GameManager.instance.Stage++;
+                AudioManager.instance.ChangeBGM(1);
             }
         }
 
@@ -96,5 +98,15 @@ public class UIManager : MonoBehaviour
         }
 
         energyText.GetComponent<TextMeshProUGUI>().text = GameManager.instance.energy.ToString();
+    }
+
+    
+
+    public IEnumerator ClearUIOpen()
+    {
+        AudioManager.instance.StopBGM();
+        clearUI.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        clearUI.SetActive(false);
     }
 }

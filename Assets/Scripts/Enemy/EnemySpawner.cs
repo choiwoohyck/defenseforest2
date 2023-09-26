@@ -87,6 +87,39 @@ public class EnemySpawner : MonoBehaviour
                     spawnTimer = 0;
                 }
             }
+
+            if (GameManager.instance.Stage == 3)
+            {
+                if (spawnTimer >= maxSpawnTimer)
+                {
+
+                    for (int i = 0; i < 4; i++)
+                    {
+
+                        GameObject Enemy = Instantiate(FrankStein) as GameObject;
+                        Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
+                    }
+
+                    for (int i = 4; i < 8; i++)
+                    {
+
+                        GameObject Enemy = Instantiate(Zombie) as GameObject;
+                        Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
+                    }
+
+                    for (int i = 0; i < 2; i++)
+                    {
+
+                        GameObject Enemy = Instantiate(FrankStein) as GameObject;
+                        Enemy.transform.position = spawnPosition[Random.Range(0, 16)].transform.position;
+                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
+                    }
+                    spawnTimer = 0;
+                }
+
+            }
         }
        
     }
