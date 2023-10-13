@@ -64,7 +64,8 @@ namespace EnumManagerSpace
         ICICLE,
         LEAFATTACK,
         GATHERINGENERGY,
-        TELEPORT
+        TELEPORT,
+        MIDDLEBOSSBULLETHIT
     };
 
     public enum OwnerType
@@ -75,6 +76,7 @@ namespace EnumManagerSpace
         ROADICEELEMENT,
         LEAFELEMENT,
         ROADLEAFELEMENT,
+        MIDDLEBOSS,
         ENEMY
     }
 }

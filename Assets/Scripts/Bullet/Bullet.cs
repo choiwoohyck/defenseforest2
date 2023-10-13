@@ -144,6 +144,17 @@ public class Bullet : MonoBehaviour
             collision.gameObject.GetComponent<HitObject>().ChangeColor();
             BulletManager.instance.ReturnObject(gameObject);
         }
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
+            if (type == OwnerType.MIDDLEBOSS)
+                EffectManager.instance.CreateEffect(EffectType.MIDDLEBOSSBULLETHIT, transform.position, transform.rotation);
+
+            collision.gameObject.GetComponent<HitObject>().ChangeColor();
+            BulletManager.instance.ReturnObject(gameObject);
+
+        }
     }
 
     public void SetOwner(GameObject owner)
