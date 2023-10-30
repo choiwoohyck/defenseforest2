@@ -29,10 +29,14 @@ public class EffectManager : MonoBehaviour
         
     }
 
-    public void CreateEffect(EffectType type, Vector3 effectPos, Quaternion rotation)
+    public void CreateEffect(EffectType type, Vector3 effectPos, Quaternion rotation, Vector3? scale = null)
     {
+
         GameObject effect = Instantiate(EffectPrefab[(int)type]) as GameObject;
         effect.transform.position = effectPos;
         effect.transform.rotation = rotation;
+
+        if (scale != null)
+            effect.transform.localScale = (Vector3)scale;
     }
 }

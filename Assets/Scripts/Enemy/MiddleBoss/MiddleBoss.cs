@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using EnumManagerSpace;
 using UnityEngine.Rendering;
+using System.Runtime.Serialization.Json;
+using UnityEditor.ShaderGraph.Internal;
 
 public class MiddleBoss : MonoBehaviour
 {
-    MiddleBossState state;
+    public MiddleBossState state;
     UnitInfo info;
 
     public GameObject laserPrefab;
     public GameObject laserBoundaryPrefab;
+    public GameObject bossActiveRange;
 
     GameObject Player;
     Animator animator;
@@ -18,12 +21,23 @@ public class MiddleBoss : MonoBehaviour
     float patternTimer = 0;
     float waitTimer = 0;
     float laserAngle = 0;
+    float machineTimer = 0;
+    float explosionTimer = 0;
 
     public float patterCoolDownTime = 2f;
 
     bool isWait = false;
+    bool isDead = false;
+    bool isMachine = false;
+    public bool isActive = false;
 
     int laserPattern = 0;
+    int shootPattern = 0;
+    int machineBulletCnt = 100;
+    int lastPattern = 0;
+
+    float shakeIntensity = 0f;
+    Vector3 deadPosition;
 
     // Start is called before the first frame update
 
@@ -49,6 +63,45 @@ public class MiddleBoss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isActive) return;
+
+        if (info.hp <= 0 && !isDead)
+        {
+            deadPosition = transform.position;
+            isDead = true;
+            
+            shakeIntensity = 2f;
+
+            Debug.Log("isDead IF문");
+        }
+
+        if (shakeIntensity > 0)
+        {
+            transform.position = deadPosition + new Vector3(Random.insideUnitCircle.x * shakeIntensity / 6f , Random.insideUnitCircle.y * shakeIntensity / 6f, 1);
+            transform.rotation = Quaternion.Euler(new Vector3(1, 1, Random.insideUnitCircle.x * shakeIntensity * 10f));
+            float randomScale = Random.Range(1f, 3f);
+            if (explosionTimer >= Time.deltaTime * 3f)
+            {
+                EffectManager.instance.CreateEffect(EffectType.FIREELEMENTEXPLOSION, transform.position + new Vector3(Random.insideUnitCircle.x * 3f, Random.insideUnitCircle.x * 3f), transform.rotation, new Vector3(randomScale, randomScale, 1f));
+                explosionTimer = 0;
+            }
+            explosionTimer += Time.deltaTime;
+            shakeIntensity -= Time.deltaTime;
+            
+        }
+
+        else if (isDead)
+        {
+            StartCoroutine("Die");
+
+            StageManager.instance.bossKill = true;
+            GameManager.instance.energy += 1500;
+            bossActiveRange.GetComponent<BossActiveRange>().active = false;
+            isActive = false;
+            gameObject.SetActive(false);
+        }
+
+        if (isDead) return;
         if (state == MiddleBossState.IDLE)
         {
             
@@ -63,6 +116,15 @@ public class MiddleBoss : MonoBehaviour
                 if (state == MiddleBossState.LASER)
                     CreateBoundary();
 
+                if (state == MiddleBossState.GUN)
+                    Shoot();
+
+                if (state == MiddleBossState.MACHINEGUN)
+                {
+                    isMachine = true;
+                    machineBulletCnt = 100;
+                }
+
                 isWait = true;
                 patternTimer = 0;
             }
@@ -70,9 +132,48 @@ public class MiddleBoss : MonoBehaviour
 
         if (state == MiddleBossState.LASER && !isWait)
         {
-            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.5f)
+            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
             {
                 animator.SetBool("isLaser", false);
+                state = MiddleBossState.IDLE;
+            }
+        }
+
+        if (state == MiddleBossState.GUN)
+        {
+            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            {
+                animator.SetBool("isShoot", false);
+                state = MiddleBossState.IDLE;
+            }
+        }
+
+        if (state == MiddleBossState.MACHINEGUN)
+        {
+            if(isMachine)
+            {
+                machineTimer += Time.deltaTime;
+                if (machineTimer >= 0.15f)
+                {
+                    GameObject Bullet = BulletManager.instance.GetPooledObject(transform.position, 7f, new Vector2(1, 1), OwnerType.MIDDLEBOSS2, 20f, null);
+                    Bullet.GetComponent<Bullet>().bulletAngle = machineBulletCnt * 7.2f;
+
+                    if (machineBulletCnt > 50)
+                        Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, machineBulletCnt * 3.6f);
+                    else
+                        Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, machineBulletCnt * -3.6f);
+
+                    machineBulletCnt--;
+                    machineTimer = 0;
+                }
+
+                if (machineBulletCnt == 0)
+                    isMachine = false;
+            }
+
+            if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && !isMachine)
+            {
+                animator.SetBool("isShoot", false);
                 state = MiddleBossState.IDLE;
             }
         }
@@ -83,7 +184,11 @@ public class MiddleBoss : MonoBehaviour
             waitTimer += Time.deltaTime;
             if (waitTimer >= 1f)
             {
-                animator.SetBool("isLaser", true);
+                if (state==MiddleBossState.LASER)
+                    animator.SetBool("isLaser", true);
+                if (state == MiddleBossState.GUN || state == MiddleBossState.MACHINEGUN)
+                    animator.SetBool("isShoot", true);
+
                 waitTimer = 0;
                 isWait = false;
             }
@@ -98,7 +203,7 @@ public class MiddleBoss : MonoBehaviour
             for (int i = 0; i < 3; i++)
             {
                 GameObject laser = Instantiate(laserPrefab);
-                laser.transform.localScale = new Vector3(3, 3, 1);
+                laser.transform.localScale = new Vector3(5, 3, 1);
                 laser.transform.position = new Vector3(transform.position.x - 0.09f, transform.position.y - 5.29f, transform.position.z);
                 laser.transform.rotation = Quaternion.Euler(0, 0, laserAngle - (i - 1) * 30 - 270);
             }
@@ -202,6 +307,7 @@ public class MiddleBoss : MonoBehaviour
             }
         }
 
+        Debug.Log("레이저");
 
         StartCoroutine("AddBoundary");
 
@@ -210,13 +316,15 @@ public class MiddleBoss : MonoBehaviour
 
     public void CreateBoundary()
     {
+       
+        
         if (laserPattern == 0)
         {
 
             for (int i = 0; i < 3; i++)
             {
                 GameObject boundary = Instantiate(laserBoundaryPrefab);
-                boundary.transform.localScale = new Vector3(3, 3, 1);
+                boundary.transform.localScale = new Vector3(3, 5, 1);
                 boundary.transform.position = new Vector3(transform.position.x - 0.09f, transform.position.y - 5.29f, transform.position.z);
 
                 Vector3 target_v = Player.transform.position - transform.position;
@@ -326,11 +434,37 @@ public class MiddleBoss : MonoBehaviour
 
     }
 
+    public void Shoot()
+    {
+        if (state == MiddleBossState.GUN)
+        {
+            shootPattern = Random.Range(0, 3);
+
+            for (int i = 0; i < 18; i++)
+            {
+
+                GameObject Bullet = BulletManager.instance.GetPooledObject(transform.position, 5f, new Vector2(1, 1), OwnerType.MIDDLEBOSS, 20f, null);
+                Bullet.GetComponent<Bullet>().bulletAngle = i * 20;
+                Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, i * 20f);
+            }
+        }
+
+        if (state == MiddleBossState.MACHINEGUN)
+            isMachine = true;
+    }
+
+
+
     void ChangePattern()
     {
-        int randomStateNum = Random.Range(0, 2);
-        //state = (MiddleBossState)randomStateNum;
-        state = MiddleBossState.LASER;
+        int randomStateNum = Random.Range(1, 4);
+
+        while (randomStateNum == lastPattern)
+            randomStateNum = Random.Range(1, 4);
+
+        lastPattern = randomStateNum;
+
+        state = (MiddleBossState)randomStateNum;
 
         if (state == MiddleBossState.LASER)
             laserPattern = Random.Range(0, 4);
@@ -348,7 +482,7 @@ public class MiddleBoss : MonoBehaviour
             for (int i = 0; i < 3; i++)
             {
                 GameObject boundary = Instantiate(laserBoundaryPrefab);
-                boundary.transform.localScale = new Vector3(3, 3, 1);
+                boundary.transform.localScale = new Vector3(3, 5, 1);
                 boundary.transform.position = new Vector3(transform.position.x - 0.09f, transform.position.y - 5.29f, transform.position.z);
                 boundary.transform.rotation = Quaternion.Euler(0, 0, laserAngle - (i - 1) * 30 + 40);
             }
@@ -413,7 +547,7 @@ public class MiddleBoss : MonoBehaviour
             for (int i = 0; i < 3; i++)
             {
                 GameObject laser = Instantiate(laserPrefab);
-                laser.transform.localScale = new Vector3(3, 3, 1);
+                laser.transform.localScale = new Vector3(5, 3, 1);
                 laser.transform.position = new Vector3(transform.position.x - 0.09f, transform.position.y - 5.29f, transform.position.z);
                 laser.transform.rotation = Quaternion.Euler(0, 0, laserAngle - (i - 1) * 30 + 310);
             }
@@ -466,9 +600,24 @@ public class MiddleBoss : MonoBehaviour
             laser.transform.rotation = Quaternion.Euler(0, 0, 270);
         }
 
+        Debug.Log("레이저");
+    }
+
+
+    IEnumerator Die()
+    {
+        animator.speed = 0.0f;
+
+        Color rendererColor = GetComponent<SpriteRenderer>().color;
+
+        while (rendererColor.a > 0)
+        {
+            rendererColor.a -= Time.deltaTime * 2;
+            GetComponent<SpriteRenderer>().color = rendererColor;
+            yield return null;
+        }
 
     }
 
-    
 
 }

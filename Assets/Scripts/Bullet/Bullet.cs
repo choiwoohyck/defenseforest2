@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour
     private float bulletSpeed = 3.0f;
 
     [SerializeField]
-    private float bulletAngle = 0;
+    public float bulletAngle = 0;
 
     public float damage = 1f;
 
@@ -57,6 +57,15 @@ public class Bullet : MonoBehaviour
             bulletDirection = new Vector2(Mathf.Cos(bulletAngle), Mathf.Sin(bulletAngle));
             transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
         }
+
+        if (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2)
+        {
+
+            //transform.rotation = Quaternion.Euler(0,0,bulletAngle + 180);
+            //bulletDirection = new Vector2(Mathf.Cos(bulletAngle), Mathf.Sin(bulletAngle));
+            bulletDirection = new Vector2(1, 1);
+            transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
+        }
     }
 
     public void Init(Vector2 b_stratPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type,float b_damage,GameObject b_target)
@@ -67,6 +76,7 @@ public class Bullet : MonoBehaviour
         type = o_type;
         damage = b_damage;
         target = b_target;
+        if (type != OwnerType.MIDDLEBOSS && type != OwnerType.MIDDLEBOSS2) 
         transform.rotation = Quaternion.Euler(0,0,Mathf.Atan2(rotVec.y,rotVec.x) * Mathf.Rad2Deg + 180);
     }
 
@@ -134,7 +144,7 @@ public class Bullet : MonoBehaviour
 
         }
 
-        if (collision.gameObject.CompareTag("Boss"))
+        if (collision.gameObject.CompareTag("Boss") && type == OwnerType.PLAYER)
         {
             collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
 
@@ -145,13 +155,30 @@ public class Bullet : MonoBehaviour
             BulletManager.instance.ReturnObject(gameObject);
         }
 
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && (type ==OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2))
         {
+            if (collision.GetComponent<UnitInfo>().isInvincible) return;
+
             collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
-            if (type == OwnerType.MIDDLEBOSS)
+
+            if (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2)
                 EffectManager.instance.CreateEffect(EffectType.MIDDLEBOSSBULLETHIT, transform.position, transform.rotation);
 
-            collision.gameObject.GetComponent<HitObject>().ChangeColor();
+            BulletManager.instance.ReturnObject(gameObject);
+
+        }
+
+        if (collision.gameObject.CompareTag("MagicStone") && (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2))
+        {
+            if (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2)
+                EffectManager.instance.CreateEffect(EffectType.MIDDLEBOSSBULLETHIT, transform.position, transform.rotation);
+
+            BulletManager.instance.ReturnObject(gameObject);
+        }
+
+        if (collision.gameObject.CompareTag("MagicStone") && (type == OwnerType.PLAYER))
+        {
+            EffectManager.instance.CreateEffect(EffectType.BULLET1HIT, transform.position, transform.rotation);
             BulletManager.instance.ReturnObject(gameObject);
 
         }

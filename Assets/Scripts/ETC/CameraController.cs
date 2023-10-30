@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CameraController : MonoBehaviour
 {
     // Start is called before the first frame update
 
     public GameObject Player;
+    public bool isBoss = false;
+    public float lerpSpeed = 0.5f;
     void Start()
     {
         ResolutionFix();
@@ -15,13 +18,22 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+      
         float xPos = Player.transform.position.x;
         float yPos = Player.transform.position.y;
 
         xPos = Mathf.Clamp(xPos, -4.1f, 4.1f);
         yPos = Mathf.Clamp(yPos, 2, 10);
 
-        transform.position = new Vector3(xPos, yPos, transform.position.z);
+        if (isBoss)
+        {
+            xPos = -0.25f;
+            yPos = 9.7f;
+        }
+
+        Vector3 camPos = new Vector3(xPos, yPos, transform.position.z);
+        transform.position = camPos;
+        transform.position = Vector3.Lerp(transform.position, camPos, Time.deltaTime * lerpSpeed);
     }
 
     private void ResolutionFix()

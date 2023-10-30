@@ -85,6 +85,11 @@ public class BattlePopUp : MonoBehaviour
 
         buildUI.gameObject.transform.GetChild(0).gameObject.SetActive(false);
         UIManager.instance.fadeImg.gameObject.SetActive(true);
+        if (GameManager.instance.Stage == 2)
+        {
+            UIManager.instance.elementOffText.gameObject.SetActive(true);
+            AllyUnitManager.instance.AllInactive();
+        }
         UIManager.instance.changeTimerOn = true;
         battlePopUpButton.SetActive(false);
         AudioManager.instance.StopBGM();

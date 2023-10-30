@@ -138,6 +138,7 @@ public class Element : MonoBehaviour
 
                     AllyUnitManager.instance.noBuildElements.Remove(gameObject);
                     AllyUnitManager.instance.alreadyClick = false;
+                    AllyUnitManager.instance.elementUnits.Add(gameObject);
                     AudioManager.instance.PlayOnShotSFX(3);
                     Destroy(buildBorder);
                 }
@@ -149,6 +150,7 @@ public class Element : MonoBehaviour
             AllyUnitManager.instance.noBuildElements.Remove(gameObject);
             AllyUnitManager.instance.alreadyClick = false;
             AudioManager.instance.PlayOnShotSFX(2);
+
             Destroy(buildBorder);
             Destroy(gameObject);
         }

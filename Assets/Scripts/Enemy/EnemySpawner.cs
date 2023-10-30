@@ -14,7 +14,7 @@ public class EnemySpawner : MonoBehaviour
 
     float spawnTimer = 0;
     public float maxSpawnTimer = 2f;
-    public bool stop = false;
+    public bool stop = true;
     void Start()
     {
     }
@@ -24,8 +24,13 @@ public class EnemySpawner : MonoBehaviour
     {
         if (stop) return;
 
+        Debug.Log("¹ºµ¥ ¿©±â1");
+
         if (Input.GetKeyDown(KeyCode.Z))
         {
+            Debug.Log("¹ºµ¥ ¿©±â2");
+
+
             for (int i = 0; i < 4; i++)
             {
                 GameObject Enemy = Instantiate(FrankStein) as GameObject; 
@@ -42,12 +47,15 @@ public class EnemySpawner : MonoBehaviour
         }
 
 
-        if (GameManager.instance.isGameTurn)
+        if (GameManager.instance.isGameTurn && !stop)
         {
             spawnTimer += Time.deltaTime;
 
             if (GameManager.instance.Stage == 1)
             {
+                Debug.Log("¹ºµ¥ ¿©±â3");
+
+
                 if (spawnTimer >= maxSpawnTimer)
                 {
                     
@@ -67,6 +75,9 @@ public class EnemySpawner : MonoBehaviour
             {
                 if (spawnTimer >= maxSpawnTimer)
                 {
+
+                    Debug.Log("¹ºµ¥ ¿©±â4");
+
 
                     for (int i = 0; i < 4; i++)
                     {
@@ -88,10 +99,11 @@ public class EnemySpawner : MonoBehaviour
                 }
             }
 
-            if (GameManager.instance.Stage == 3)
+            if (GameManager.instance.Stage == 4)
             {
                 if (spawnTimer >= maxSpawnTimer)
                 {
+                    Debug.Log("¹ºµ¥ ¿©±â5");
 
                     for (int i = 0; i < 4; i++)
                     {

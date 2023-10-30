@@ -24,6 +24,8 @@ public class UIManager : MonoBehaviour
 
     public GameObject BuildPopupUI;
     public GameObject clearUI;
+    public GameObject elementOffText;
+    public GameObject MiddleBoss;
 
     float changeTimer = 0f;
     public bool changeTimerOn = false;
@@ -81,12 +83,34 @@ public class UIManager : MonoBehaviour
             tmpColor.a -= Time.deltaTime;
             fadeImg.color = tmpColor;
 
+            //if (GameManager.instance.Stage == 2)
+            //{
+            //    Color tmpColor2 = elementOffText.GetComponent<TextMeshProUGUI>().color   ;
+            //    tmpColor2.a -= Time.deltaTime;
+            //    elementOffText.GetComponent<TextMeshPro>().color = tmpColor2;
+            //}
+
             if (fadeImg.color.a <= 0)
             {
                 fadeout = false;
                 fadeImg.gameObject.SetActive(false);
-                GameManager.instance.spawner.stop = false;
+
                 GameManager.instance.Stage++;
+
+                if (GameManager.instance.Stage == 3)
+                {
+                    MiddleBoss.SetActive(true);
+                    elementOffText.gameObject.SetActive(false);
+
+                    GameManager.instance.gameMaxTime = 120;
+                }
+                else
+                {
+                    GameManager.instance.spawner.stop = false;
+                    GameManager.instance.gameMaxTime = 60;
+                }
+
+
                 AudioManager.instance.ChangeBGM(1);
             }
         }
@@ -94,7 +118,7 @@ public class UIManager : MonoBehaviour
         if (GameManager.instance.isGameTurn)
         {
             DayBarImage.gameObject.SetActive(true);
-            DayBarFillImage.fillAmount = (60 - StageManager.instance.gameTime) / 60;
+            DayBarFillImage.fillAmount = (GameManager.instance.gameMaxTime - StageManager.instance.gameTime) / GameManager.instance.gameMaxTime;
         }
 
         energyText.GetComponent<TextMeshProUGUI>().text = GameManager.instance.energy.ToString();

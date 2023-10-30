@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
 
     public int Stage = 0;
 
+    public int gameMaxTime = 60;
+
     private void Awake()
     {
         instance = this;

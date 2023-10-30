@@ -12,8 +12,7 @@ public class UnitInfo : MonoBehaviour
     public float damage;
     public bool isInvincible = false;
 
-    bool invincibleTimerOn = false;
-
+    float invincibleTimer = 0f;
 
     void Start()
     {
@@ -23,7 +22,15 @@ public class UnitInfo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+         if (isInvincible)
+        {
+            invincibleTimer += Time.deltaTime;
+            if (invincibleTimer > 0.5f)
+            {
+                invincibleTimer = 0f;
+                isInvincible = false;
+            }
+        }
     }
 
     public void StatusInit(float hp, float attackDelay, float damage)
@@ -37,15 +44,8 @@ public class UnitInfo : MonoBehaviour
 
     public void DecreaseHP(float damage)
     {
-        if (isInvincible)
-        {
-            invincibleTimerOn = true;
-
-            if (invincibleTimerOn)
-                StartCoroutine("InvincibleOff");
-        }
-
-        else
+       
+        if (!isInvincible)
         {
             isInvincible = true;
             GetComponent<HitObject>().ChangeColor();
@@ -53,10 +53,5 @@ public class UnitInfo : MonoBehaviour
         }
     }
 
-    IEnumerator InvincibleOff()
-    {
-        invincibleTimerOn = false;
-        yield return new WaitForSeconds(0.5f);
-        isInvincible = false;
-    }
+
 }

@@ -13,6 +13,7 @@ public class StageManager : MonoBehaviour
 
     public float gameTime = 0;
     public bool isClearSoundPlay = false;
+    public bool bossKill = false;
     // Start is called before the first frame update
 
     private void Awake()
@@ -30,12 +31,15 @@ public class StageManager : MonoBehaviour
     {
         if (GameManager.instance.isGameTurn)
         {
-            float color = (GlobalLight.GetComponent<Light2D>().color.r * 255) + Time.deltaTime * 4;
+            float changeSpeed = GameManager.instance.Stage == 3 ? 2f:4f;
+            
+            float color = (GlobalLight.GetComponent<Light2D>().color.r * 255) + Time.deltaTime * changeSpeed;
+            
             GlobalLight.GetComponent<Light2D>().color = new Color(color / 255f, color / 255f, color / 255f);
             gameTime += Time.deltaTime;
         }
 
-        if (gameTime >= 60)
+        if (gameTime >= GameManager.instance.gameMaxTime || bossKill)
         {
             GameManager.instance.isGameTurn = false;
             AudioManager.instance.StopBGM();
@@ -47,7 +51,9 @@ public class StageManager : MonoBehaviour
 
             StartCoroutine("ClearUIOpen");
             ChangeDay();
+
             gameTime = 0;
+            bossKill = false;
         }
     }
 
@@ -77,6 +83,9 @@ public class StageManager : MonoBehaviour
         }
 
         UIManager.instance.battleButton.SetActive(true);
+
+        if (GameManager.instance.Stage == 3)
+            AllyUnitManager.instance.AllInactive(true);
 
     }
 

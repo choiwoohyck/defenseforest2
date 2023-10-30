@@ -52,7 +52,9 @@ namespace EnumManagerSpace
     public enum MiddleBossState
     {
         IDLE,
-        LASER
+        LASER,
+        GUN,
+        MACHINEGUN
     }
 
     public enum EffectType
@@ -77,6 +79,7 @@ namespace EnumManagerSpace
         LEAFELEMENT,
         ROADLEAFELEMENT,
         MIDDLEBOSS,
+        MIDDLEBOSS2,
         ENEMY
     }
 }

@@ -8,6 +8,8 @@ public class AllyUnitManager : MonoBehaviour
 
     public static AllyUnitManager instance;
     public List<GameObject> allyUnits = new List<GameObject>();
+    public List<GameObject> elementUnits = new List<GameObject>();
+
     public List<GameObject> noBuildElements = new List<GameObject>();
 
     public bool isBuild = true;
@@ -27,5 +29,15 @@ public class AllyUnitManager : MonoBehaviour
     {
 
         
+    }
+
+    public void AllInactive(bool active = false)
+    {
+        foreach(var ally in elementUnits)
+        {
+            if (ally.gameObject.CompareTag("Player") || ally.gameObject.CompareTag("MagicStone")) continue;
+
+            ally.gameObject.SetActive(active);
+        }
     }
 }

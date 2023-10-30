@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Boundary
+  m_Name: Bullet
   m_Shader: {fileID: -6465566751694194690, guid: 72735d8b89ad55748bedb8b138edf82c, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -43,5 +43,5 @@ Material:
     m_Ints: []
     m_Floats: []
     m_Colors:
-    - _Color: {r: 69.15966, g: 67.37796, b: 180.81174, a: 1}
+    - _Color: {r: 2.7029643, g: 0.55518514, b: 0.21674718, a: 1}
   m_BuildTextureStacks: []

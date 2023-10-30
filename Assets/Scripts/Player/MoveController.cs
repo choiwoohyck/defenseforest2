@@ -9,6 +9,7 @@ public class MoveController : MonoBehaviour
     float shootTime = 0;
     float teleportTimer = 0;
 
+    public bool inMiddleBossStage = false;
     bool isTeleport = false;
 
     Vector2 movement = new Vector2();
@@ -53,7 +54,8 @@ public class MoveController : MonoBehaviour
     {
         
 
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow)) 
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
+            Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) 
         {
             moveDir.x = Input.GetAxisRaw("Horizontal");
             moveDir.y = Input.GetAxisRaw("Vertical");
@@ -61,12 +63,14 @@ public class MoveController : MonoBehaviour
             AudioManager.instance.PlayOnShotWALKSFX();
             moveDir.Normalize();
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && teleportTimer >= 1.5f)
-            {
-                Teleport(moveDir);
-                GetComponent<UnitInfo>().isInvincible = true;
-                teleportTimer = 0;
-            }
+           
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && teleportTimer >= 0.5f)
+        {
+            Teleport(moveDir);
+            GetComponent<UnitInfo>().isInvincible = true;
+            teleportTimer = 0;
         }
 
         movement.x = Input.GetAxisRaw("Horizontal");
@@ -78,8 +82,17 @@ public class MoveController : MonoBehaviour
         float xPos = transform.position.x;
         float yPos = transform.position.y;
 
-        xPos = Mathf.Clamp(xPos, -12.8f, 12.8f);
-        yPos = Mathf.Clamp(yPos, -2.5f, 15.4f);
+        if (!inMiddleBossStage)
+        {
+            xPos = Mathf.Clamp(xPos, -12.8f, 12.8f);
+            yPos = Mathf.Clamp(yPos, -2.5f, 15.4f);
+
+        }
+        else
+        {
+            xPos = Mathf.Clamp(xPos, -8.93f, 8.44f);
+            yPos = Mathf.Clamp(yPos, 5.2f, 14.45f);
+        }
 
         rigidbody2D.MovePosition(rigidbody2D.position + movement * movementSpeed * Time.fixedDeltaTime);
         //transform.position = new Vector3(xPos, yPos, transform.position.z);
