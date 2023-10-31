@@ -2,58 +2,74 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EnumManagerSpace;
+using Unity.VisualScripting;
+
 public class MoveController : MonoBehaviour
 {
 
     public float movementSpeed = 2.5f;
     float shootTime = 0;
-    float teleportTimer = 0;
+    public float teleportTimer = 1.0f;
+    public float maxTeleportTimer = 1.0f;
 
     public bool inMiddleBossStage = false;
     bool isTeleport = false;
 
     Vector2 movement = new Vector2();
-    Vector2 moveDir = new Vector2();
+    public Vector2 moveDir = new Vector2();
     Rigidbody2D rigidbody2D;
 
     Animator animator;
+    UnitInfo info;
 
     // Start is called before the first frame update
     void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        info = GetComponent<UnitInfo>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        rigidbody2D.velocity = Vector3.zero;
-        rigidbody2D.angularVelocity = 0;
-        teleportTimer += Time.deltaTime;
-        UpdateState();
-        Shoot();
-
-        if (Input.GetMouseButtonDown(0))
+        if (info.hp > 0)
         {
-            ClickElement();
+
+            rigidbody2D.velocity = Vector3.zero;
+            rigidbody2D.angularVelocity = 0;
+            teleportTimer += Time.deltaTime;
+            UpdateState();
+            Shoot();
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                ClickElement();
+            }
+
+            if (Input.GetKey(KeyCode.F1))
+                StageManager.instance.gameTime = 60;
+
         }
 
-        if (Input.GetKey(KeyCode.F1))
-            StageManager.instance.gameTime = 60;
-
+        else
+            animator.speed = 0;
         
     }
 
     private void FixedUpdate()
     {
-        MoveCharacter();
+        if (info.hp > 0)
+        {
+
+            MoveCharacter();
+            Teleport();
+        }
     }
 
     private void MoveCharacter()
     {
         
-
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
             Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) 
         {
@@ -62,16 +78,9 @@ public class MoveController : MonoBehaviour
 
             AudioManager.instance.PlayOnShotWALKSFX();
             moveDir.Normalize();
-
-           
+        
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && teleportTimer >= 0.5f)
-        {
-            Teleport(moveDir);
-            GetComponent<UnitInfo>().isInvincible = true;
-            teleportTimer = 0;
-        }
 
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
@@ -113,17 +122,35 @@ public class MoveController : MonoBehaviour
         }
     }
 
-    private void Teleport(Vector2 teleportDir)
+    private void Teleport()
     {
 
-        float xPos = transform.position.x+teleportDir.x;
-        float yPos = transform.position.y+teleportDir.y;
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
+            Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        {
+            moveDir.x = Input.GetAxisRaw("Horizontal");
+            moveDir.y = Input.GetAxisRaw("Vertical");
 
-        xPos = Mathf.Clamp(xPos, -12.8f, 12.8f);
-        yPos = Mathf.Clamp(yPos, -2.5f, 15.4f);
+            moveDir.Normalize();
+        }
 
-        transform.position = new Vector3(xPos, yPos, transform.position.z);
-        EffectManager.instance.CreateEffect(EffectType.TELEPORT, transform.position, transform.rotation);
+        if (Input.GetKeyDown(KeyCode.LeftShift) && teleportTimer >= maxTeleportTimer)
+        {
+            
+            GetComponent<UnitInfo>().isInvincible = true;
+            teleportTimer = 0;
+
+            float xPos = transform.position.x + moveDir.x;
+            float yPos = transform.position.y + moveDir.y;
+
+            xPos = Mathf.Clamp(xPos, -12.8f, 12.8f);
+            yPos = Mathf.Clamp(yPos, -2.5f, 15.4f);
+
+            transform.position = new Vector3(xPos, yPos, transform.position.z);
+            EffectManager.instance.CreateEffect(EffectType.TELEPORT, transform.position, transform.rotation);
+        }
+
+       
     }
 
     private void Shoot()

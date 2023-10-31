@@ -161,6 +161,8 @@ public class Element : MonoBehaviour
     {
         TileMapManager.instance.changeBuildable((int)tileMapPos.x, (int)tileMapPos.y);
         AllyUnitManager.instance.allyUnits.Remove(gameObject);
+        AllyUnitManager.instance.elementUnits.Remove(gameObject);
+
 
         yield return new WaitForSeconds(1.0f);
 

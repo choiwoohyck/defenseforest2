@@ -31,7 +31,7 @@ public class BuildBorder : MonoBehaviour
             renderer.sprite = cantBuildableSprite;
         }
 
-        if (TileMapManager.instance.isRoad())
+        if (TileMapManager.instance.isRoad() && TileMapManager.instance.isBuild())
         {
             renderer.sprite = isRoadSprite;
         }

@@ -73,7 +73,7 @@ public class EnemySpawner : MonoBehaviour
 
             if (GameManager.instance.Stage == 2)
             {
-                if (spawnTimer >= maxSpawnTimer)
+                if (spawnTimer >= maxSpawnTimer+0.5f)
                 {
 
                     Debug.Log("¹ºµ¥ ¿©±â4");

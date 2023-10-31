@@ -37,6 +37,7 @@ public class FireElementRoad : MonoBehaviour
             }
 
             EffectManager.instance.CreateEffect(EffectType.FIREELEMENTEXPLOSION, transform.position, transform.rotation);
+            AudioManager.instance.PlayOnShotSFX(8);
             transform.parent.gameObject.GetComponent<Element>().isRoad = false;
             isBomb = true;
         }

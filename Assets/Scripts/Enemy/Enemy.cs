@@ -58,7 +58,7 @@ public class Enemy : MonoBehaviour
         {
             attackDistance = 1.0f;
             damage = 10;
-            hp = 75;
+            hp = 150;
             moveSpeed = 3f;
         }
 
@@ -294,8 +294,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                target.GetComponent<UnitInfo>().hp -= damage;
-                target.GetComponent<HitObject>().ChangeColor();
+                target.GetComponent<UnitInfo>().DecreaseHP(damage);
                 isAttack = true;
             }
         }

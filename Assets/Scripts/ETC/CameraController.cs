@@ -43,6 +43,7 @@ public class CameraController : MonoBehaviour
         float targetHeightAspect = 9.0f;
 
         Camera.main.aspect = targetWidthAspect / targetHeightAspect;
+        Application.targetFrameRate = 60;
 
     }
 

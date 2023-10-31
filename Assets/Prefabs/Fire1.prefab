@@ -147,6 +147,7 @@ MonoBehaviour:
   hp: 100
   maxHp: 100
   damage: 10
+  isInvincible: 0
 --- !u!61 &8639131908454577025
 BoxCollider2D:
   m_ObjectHideFlags: 0

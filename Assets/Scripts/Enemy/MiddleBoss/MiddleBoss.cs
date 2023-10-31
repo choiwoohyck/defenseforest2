@@ -1,10 +1,13 @@
+#if UNITY_EDITER
+using UnityEditor.ShaderGraph.Internal;
+#endif
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EnumManagerSpace;
 using UnityEngine.Rendering;
 using System.Runtime.Serialization.Json;
-using UnityEditor.ShaderGraph.Internal;
 
 public class MiddleBoss : MonoBehaviour
 {
@@ -35,6 +38,7 @@ public class MiddleBoss : MonoBehaviour
     int shootPattern = 0;
     int machineBulletCnt = 100;
     int lastPattern = 0;
+    int explosionCnt = 0;
 
     float shakeIntensity = 0f;
     Vector3 deadPosition;
@@ -49,7 +53,7 @@ public class MiddleBoss : MonoBehaviour
 
     void init()
     {
-        info.StatusInit(1000, 100, 20);
+        info.StatusInit(2000, 100, 20);
     }
 
     
@@ -83,8 +87,14 @@ public class MiddleBoss : MonoBehaviour
             if (explosionTimer >= Time.deltaTime * 3f)
             {
                 EffectManager.instance.CreateEffect(EffectType.FIREELEMENTEXPLOSION, transform.position + new Vector3(Random.insideUnitCircle.x * 3f, Random.insideUnitCircle.x * 3f), transform.rotation, new Vector3(randomScale, randomScale, 1f));
+                
+                explosionCnt++;
                 explosionTimer = 0;
             }
+
+            if (explosionCnt % 15 == 0)
+                AudioManager.instance.PlayOnShotSFX(8);
+
             explosionTimer += Time.deltaTime;
             shakeIntensity -= Time.deltaTime;
             
@@ -104,10 +114,8 @@ public class MiddleBoss : MonoBehaviour
         if (isDead) return;
         if (state == MiddleBossState.IDLE)
         {
-            
             patternTimer += Time.deltaTime;
             
-
             if (patternTimer >= patterCoolDownTime)
             {
                 
@@ -156,12 +164,14 @@ public class MiddleBoss : MonoBehaviour
                 if (machineTimer >= 0.15f)
                 {
                     GameObject Bullet = BulletManager.instance.GetPooledObject(transform.position, 7f, new Vector2(1, 1), OwnerType.MIDDLEBOSS2, 20f, null);
-                    Bullet.GetComponent<Bullet>().bulletAngle = machineBulletCnt * 7.2f;
+                    Bullet.GetComponent<Bullet>().bulletAngle = 10f + (machineBulletCnt) * 7.2f;
 
                     if (machineBulletCnt > 50)
                         Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, machineBulletCnt * 3.6f);
                     else
                         Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, machineBulletCnt * -3.6f);
+
+                    AudioManager.instance.PlayOnShotSFX(6);
 
                     machineBulletCnt--;
                     machineTimer = 0;
@@ -308,6 +318,8 @@ public class MiddleBoss : MonoBehaviour
         }
 
         Debug.Log("레이저");
+        AudioManager.instance.PlayOnShotSFX(5);
+
 
         StartCoroutine("AddBoundary");
 
@@ -440,6 +452,8 @@ public class MiddleBoss : MonoBehaviour
         {
             shootPattern = Random.Range(0, 3);
 
+            AudioManager.instance.PlayOnShotSFX(7);
+
             for (int i = 0; i < 18; i++)
             {
 
@@ -447,6 +461,8 @@ public class MiddleBoss : MonoBehaviour
                 Bullet.GetComponent<Bullet>().bulletAngle = i * 20;
                 Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, i * 20f);
             }
+
+            StartCoroutine("AddShoot");
         }
 
         if (state == MiddleBossState.MACHINEGUN)
@@ -600,6 +616,8 @@ public class MiddleBoss : MonoBehaviour
             laser.transform.rotation = Quaternion.Euler(0, 0, 270);
         }
 
+        AudioManager.instance.PlayOnShotSFX(5);
+
         Debug.Log("레이저");
     }
 
@@ -619,5 +637,21 @@ public class MiddleBoss : MonoBehaviour
 
     }
 
+    IEnumerator AddShoot()
+    {
+        yield return new WaitForSeconds(0.8f);
+        shootPattern = Random.Range(0, 3);
+
+        AudioManager.instance.PlayOnShotSFX(7);
+
+        for (int i = 0; i < 18; i++)
+        {
+            GameObject Bullet = BulletManager.instance.GetPooledObject(transform.position, 5f, new Vector2(1, 1), OwnerType.MIDDLEBOSS, 20f, null);
+            Bullet.GetComponent<Bullet>().bulletAngle = i * 30;
+            Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, i * 30f);
+        }
+
+
+    }
 
 }

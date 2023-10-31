@@ -72,6 +72,8 @@ public class TileMapManager : MonoBehaviour
         int x = (int)TileMapManager.instance.mapPostion().x + 13;
         int y = (int)(14 - TileMapManager.instance.mapPostion().y);
 
+        if (x >= 28 || y >= 18)
+            return false;
 
         return tiles[x, y].buildable;
     }

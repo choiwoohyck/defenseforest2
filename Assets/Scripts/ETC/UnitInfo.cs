@@ -25,7 +25,7 @@ public class UnitInfo : MonoBehaviour
          if (isInvincible)
         {
             invincibleTimer += Time.deltaTime;
-            if (invincibleTimer > 0.5f)
+            if (invincibleTimer > 0.2f)
             {
                 invincibleTimer = 0f;
                 isInvincible = false;
@@ -50,7 +50,14 @@ public class UnitInfo : MonoBehaviour
             isInvincible = true;
             GetComponent<HitObject>().ChangeColor();
             hp -= damage;
+
+            if (hp <= 0 && gameObject.CompareTag("Player"))
+            {
+                gameObject.GetComponent<DeadComponent>().InitSetting();
+            }
         }
+
+        
     }
 
 

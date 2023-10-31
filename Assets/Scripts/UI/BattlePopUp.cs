@@ -65,6 +65,7 @@ public class BattlePopUp : MonoBehaviour
     {
         ActiveBackground(false);
         battlePopUpUI.SetActive(false);
+        noButton.sprite = noButtonSprite;
         AudioManager.instance.PlayOnShotSFX(2);
     }
 
