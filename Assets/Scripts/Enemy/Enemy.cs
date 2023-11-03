@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     public float damage;
     public float moveSpeed;
     public float originMoveSpeed;
+    public float waitNum = 0;
     public int frozenCnt = 0;
 
 
@@ -26,6 +27,7 @@ public class Enemy : MonoBehaviour
     public bool isFrozen = false;
     public bool noEnergy = false;
 
+    public int spawnNum;
 
     bool isAttack = false;
     bool isRush = false;
@@ -87,6 +89,8 @@ public class Enemy : MonoBehaviour
 
         if (hp <= 0 && !isDead)
         {
+      
+                
             StartCoroutine("Die");
             isDead = true;
         }
@@ -117,15 +121,26 @@ public class Enemy : MonoBehaviour
 
                 if (target == ally || ally.GetComponent<UnitInfo>().hp <= 0) continue;
                 if (ally.CompareTag("Player") && !TileMapManager.instance.isPlayerRoad()) continue;
-                if (!TileMapManager.instance.isSameRoad(ally.transform.position,transform.position)) continue;
+                if (!ally.CompareTag("MagicStone") && ally.GetComponent<UnitInfo>().roadNum != spawnNum) continue;
+                if (ally.GetComponent<UnitInfo>().targetedNum >= 2) continue;
 
                 float distance = Vector3.Distance(transform.position, ally.transform.position);
         
                 if (distance < minDistance)
                 {
-                    target = ally;
+                    if (target != ally)
+                    {
+                        Debug.Log(target + " " + ally);
+                        target = ally;
+                    
+                    }
                     minDistance = distance;
                 }
+            }
+
+            if (target.CompareTag("Element"))
+            {
+                target.GetComponent<UnitInfo>().targetedNum++;
             }
 
             ChangeState(EnemyState.RUN);
@@ -141,13 +156,17 @@ public class Enemy : MonoBehaviour
 
         if (state == EnemyState.RUN && target != null)
         {
+            searchTimer += Time.deltaTime;
 
             if (searchTimer >= 1f)
             {
-                ChangeState(EnemyState.SEARCH);
+                if (target.CompareTag("Element"))
+                    target.GetComponent<UnitInfo>().targetedNum--;
+
+                    ChangeState(EnemyState.SEARCH);
                 searchTimer = 0;
             }
-           
+
             if (target.CompareTag("Player"))
             {
                 if (!isRush)
@@ -171,13 +190,12 @@ public class Enemy : MonoBehaviour
                 direction = (target.transform.position - transform.position).normalized;
                 searchTimer += Time.deltaTime;
 
-                Debug.DrawRay(transform.position, direction * 0.75f, new Color(0, 1, 0));
+                Debug.DrawRay(transform.position, direction * 0.35f, new Color(0, 1, 0));
                 RaycastHit2D[] rayHits = Physics2D.RaycastAll(transform.position, direction, 0.35f);
                 foreach (RaycastHit2D rayHit in rayHits)
                 {
                     if (rayHit.collider.gameObject.CompareTag("Enemy") && rayHit.collider.gameObject != gameObject)
                     {
-                        Debug.Log("¿ä±â");
                         ChangeState(EnemyState.READY);
                         animator.SetBool("isReady", true);
 
@@ -211,9 +229,8 @@ public class Enemy : MonoBehaviour
             animator.SetFloat("xDir", direction.x);
             animator.SetFloat("yDir", direction.y);
 
-            if (Vector2.Distance(transform.position, target.transform.position) < 0.8f && target != GameObject.Find("MagicStone"))
+            if (Vector2.Distance(transform.position, target.transform.position) < 0.8f && target != GameObject.Find("MagicStone") && !target.CompareTag("Player"))
             {
-
                 ChangeState(EnemyState.ATTACK);
                 animator.SetBool("isAttack", true);
                 isAttack = true;
@@ -252,6 +269,15 @@ public class Enemy : MonoBehaviour
         {
             RaycastHit2D[] rayHits = Physics2D.RaycastAll(transform.position, direction, 0.35f);
             int cnt = 0;
+
+            waitNum += Time.deltaTime;
+
+            if (waitNum >= 3f)
+            {
+                ChangeState(EnemyState.SEARCH);
+                waitNum = 0;
+            }
+
             foreach (RaycastHit2D rayHit in rayHits)
             {
                 if (rayHit.collider.gameObject.CompareTag("Enemy") && rayHit.collider.gameObject != gameObject)
@@ -314,9 +340,13 @@ public class Enemy : MonoBehaviour
         }
 
         if (!noEnergy)
-            GameManager.instance.energy += 10;
+            GameManager.instance.energy += 5;
 
         EnemyUnitManager.instance.enemyUnits.Remove(gameObject);
+
+        if (target != null && target.CompareTag("Element"))
+            target.GetComponent<UnitInfo>().targetedNum--;  
+
         Destroy(gameObject);
     }
 

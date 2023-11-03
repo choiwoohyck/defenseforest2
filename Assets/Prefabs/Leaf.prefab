@@ -290,6 +290,7 @@ MonoBehaviour:
   hp: 100
   maxHp: 100
   damage: 100
+  isInvincible: 0
 --- !u!61 &3348833264266607100
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -379,13 +380,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3159482650013578533, guid: 9faa11a20c090e14caa39fa4841850e4, type: 3}
+      propertyPath: m_Size.x
+      value: 0.968414
+      objectReference: {fileID: 0}
+    - target: {fileID: 3159482650013578533, guid: 9faa11a20c090e14caa39fa4841850e4, type: 3}
+      propertyPath: m_Size.y
+      value: 1.0201414
+      objectReference: {fileID: 0}
+    - target: {fileID: 3159482650013578533, guid: 9faa11a20c090e14caa39fa4841850e4, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.047719866
+      objectReference: {fileID: 0}
+    - target: {fileID: 3159482650013578533, guid: 9faa11a20c090e14caa39fa4841850e4, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.006661743
+      objectReference: {fileID: 0}
     - target: {fileID: 3159482650013578542, guid: 9faa11a20c090e14caa39fa4841850e4, type: 3}
       propertyPath: m_Name
       value: poison
       objectReference: {fileID: 0}
     - target: {fileID: 3159482650013578542, guid: 9faa11a20c090e14caa39fa4841850e4, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9faa11a20c090e14caa39fa4841850e4, type: 3}

@@ -11,8 +11,11 @@ public class UnitInfo : MonoBehaviour
     public float maxHp = 100;
     public float damage;
     public bool isInvincible = false;
-
+    public int roadNum = -1;
     float invincibleTimer = 0f;
+
+    public int targetedNum = 0;
+
 
     void Start()
     {

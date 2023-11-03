@@ -45,7 +45,7 @@ public class Element : MonoBehaviour
             gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 100);
         if (type == ElementType.LEAFROAD)
         {
-            gameObject.GetComponent<UnitInfo>().StatusInit(50, 2.5f, 50);
+            gameObject.GetComponent<UnitInfo>().StatusInit(50, 2.5f, 20);
             transform.GetChild(1).gameObject.SetActive(true);
         }
     }
@@ -110,7 +110,7 @@ public class Element : MonoBehaviour
                     int y = (int)(14 - TileMapManager.instance.mapPostion().y);
 
                     tileMapPos = new Vector2(x, y);
-
+                    GetComponent<UnitInfo>().roadNum = TileMapManager.instance.tiles[x, y].roadNum;
                     TileMapManager.instance.changeBuildable(x, y);
                     if (TileMapManager.instance.isRoad())
                     {

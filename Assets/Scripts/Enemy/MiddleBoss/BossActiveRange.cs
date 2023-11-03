@@ -27,7 +27,6 @@ public class BossActiveRange : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.tag);
 
         if (collision.CompareTag("Player") && GameManager.instance.Stage == 3 && active)
         {

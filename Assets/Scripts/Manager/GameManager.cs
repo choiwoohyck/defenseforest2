@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public bool isGameTurn = false;
     public bool inActiveBuildButton = false;
 
-    public int energy = 1000;
+    public int energy = 800;
 
     public int Stage = 0;
 
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     void init()
     {
-        energy = 1000;
+        energy = 800;
     }
 
     // Update is called once per frame

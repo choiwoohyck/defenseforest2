@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-class BuildTile
+public class BuildTile
 {
     public bool buildable = true;
     public bool isRoad = false;
+    public int roadNum = 0;
    
 }
 
@@ -16,7 +17,7 @@ public class TileMapManager : MonoBehaviour
 
     // Start is called before the first frame update
     public Tilemap map;
-    BuildTile[,] tiles = new BuildTile[28,18];
+    public BuildTile[,] tiles = new BuildTile[28,18];
     public List<TileData> tileDatas;
 
     private void Awake()
@@ -52,7 +53,9 @@ public class TileMapManager : MonoBehaviour
         {
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int gridPosition = map.WorldToCell(mousePosition);
-
+            int x = (int)TileMapManager.instance.mapPostion().x + 13;
+            int y = (int)(14 - TileMapManager.instance.mapPostion().y);
+            Debug.Log("x : " + x + ", y : " + y); 
             TileBase clickedTile = map.GetTile(gridPosition);            
         }
 
@@ -107,30 +110,50 @@ public class TileMapManager : MonoBehaviour
         {
             tiles[i, 8].isRoad = true;
             tiles[i, 9].isRoad = true;
-            tiles[i+14, 8].isRoad = true;
-            tiles[i + 14, 9].isRoad = true;
-
             tiles[i, 7].isRoad = true;
             tiles[i, 10].isRoad = true;
+
+
+            tiles[i+14, 8].isRoad = true;
+            tiles[i + 14, 9].isRoad = true;
             tiles[i + 14, 7].isRoad = true;
             tiles[i + 14, 10].isRoad = true;
         }
 
         for (int i = 0; i < 8; i++)
         {
-            tiles[12, i].isRoad = true;
-            tiles[13, i].isRoad = true;
-
-            tiles[12, i+10].isRoad = true;
-            tiles[13, i+10].isRoad = true;
 
             tiles[11, i].isRoad = true;
+            tiles[12, i].isRoad = true;
+            tiles[13, i].isRoad = true;
             tiles[14, i].isRoad = true;
 
             tiles[11, i + 10].isRoad = true;
+            tiles[12, i+10].isRoad = true;
+            tiles[13, i+10].isRoad = true;
             tiles[14, i + 10].isRoad = true;
 
         }
+
+        for (int i = 0; i < 12; i++)
+        {
+            for (int j = 7; j < 11; j++)
+            {
+                tiles[i, j].roadNum = 3;
+                tiles[i+14, j].roadNum = 1;
+            }
+        }
+
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 11; j < 15; j++)
+            {
+                tiles[j, i].roadNum = 4;
+                tiles[j, i + 10].roadNum = 2;
+            }
+        }
+
+
     }
 
     public bool isSameRoad(Vector2 pos1, Vector2 pos2)
@@ -145,13 +168,13 @@ public class TileMapManager : MonoBehaviour
         int y2 = 14 - gridPosition2.y;
 
         bool isSame = false;
-
-        if (Mathf.Abs(x1 - x2) < 2)
-            isSame = true;
-        if (Mathf.Abs(y1 - y2) < 2)
+        Debug.Log(x1 + ", "  + y1);
+        if (tiles[x1, y1].roadNum == tiles[x2, y2].roadNum)
             isSame = true;
 
         return isSame;
     }
+
+
    
 }

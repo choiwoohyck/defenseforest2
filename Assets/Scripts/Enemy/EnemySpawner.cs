@@ -24,13 +24,9 @@ public class EnemySpawner : MonoBehaviour
     {
         if (stop) return;
 
-        Debug.Log("¹ºµ¥ ¿©±â1");
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            Debug.Log("¹ºµ¥ ¿©±â2");
-
-
             for (int i = 0; i < 4; i++)
             {
                 GameObject Enemy = Instantiate(FrankStein) as GameObject; 
@@ -53,8 +49,6 @@ public class EnemySpawner : MonoBehaviour
 
             if (GameManager.instance.Stage == 1)
             {
-                Debug.Log("¹ºµ¥ ¿©±â3");
-
 
                 if (spawnTimer >= maxSpawnTimer)
                 {
@@ -63,7 +57,9 @@ public class EnemySpawner : MonoBehaviour
                      {
                        
                           GameObject Enemy = Instantiate(Zombie) as GameObject;
-                          Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                          int spawnNum = Random.Range(i * 2, i * 2 + 2);
+                          SetRoadNum(ref Enemy, spawnNum);  
+                          Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                           Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                      }
 
@@ -76,14 +72,13 @@ public class EnemySpawner : MonoBehaviour
                 if (spawnTimer >= maxSpawnTimer+0.5f)
                 {
 
-                    Debug.Log("¹ºµ¥ ¿©±â4");
-
-
                     for (int i = 0; i < 4; i++)
                     {
 
                         GameObject Enemy = Instantiate(Zombie) as GameObject;
-                        Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                        int spawnNum = Random.Range(i * 2, i * 2 + 2);
+                        SetRoadNum(ref Enemy, spawnNum);
+                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                     }
 
@@ -91,7 +86,9 @@ public class EnemySpawner : MonoBehaviour
                     {
 
                         GameObject Enemy = Instantiate(Zombie) as GameObject;
-                        Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                        int spawnNum = Random.Range(i * 2, i * 2 + 2);
+                        SetRoadNum(ref Enemy, spawnNum);
+                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                     }
 
@@ -103,13 +100,14 @@ public class EnemySpawner : MonoBehaviour
             {
                 if (spawnTimer >= maxSpawnTimer)
                 {
-                    Debug.Log("¹ºµ¥ ¿©±â5");
 
                     for (int i = 0; i < 4; i++)
                     {
 
                         GameObject Enemy = Instantiate(FrankStein) as GameObject;
-                        Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                        int spawnNum = Random.Range(i * 2, i * 2 + 2);
+                        SetRoadNum(ref Enemy, spawnNum);
+                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
                     }
 
@@ -117,7 +115,9 @@ public class EnemySpawner : MonoBehaviour
                     {
 
                         GameObject Enemy = Instantiate(Zombie) as GameObject;
-                        Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                        int spawnNum = Random.Range(i * 2, i * 2 + 2);
+                        SetRoadNum(ref Enemy, spawnNum);
+                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                     }
 
@@ -125,7 +125,9 @@ public class EnemySpawner : MonoBehaviour
                     {
 
                         GameObject Enemy = Instantiate(FrankStein) as GameObject;
-                        Enemy.transform.position = spawnPosition[Random.Range(0, 16)].transform.position;
+                        int spawnNum = Random.Range(0, 16);
+                        SetRoadNum(ref Enemy, spawnNum);
+                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
                     }
                     spawnTimer = 0;
@@ -134,5 +136,19 @@ public class EnemySpawner : MonoBehaviour
             }
         }
        
+    }
+
+    void SetRoadNum(ref GameObject e, int rand)
+    {
+        if (rand == 0 || rand == 1  || rand == 8 || rand ==9)
+            e.GetComponent<Enemy>().spawnNum = 2;
+        if (rand == 2 || rand == 3  || rand == 10 || rand ==11)
+            e.GetComponent<Enemy>().spawnNum = 3;
+        if (rand == 4 || rand == 5 || rand == 12 || rand == 13)
+            e.GetComponent<Enemy>().spawnNum = 1;
+        if (rand ==6 || rand ==7 || rand == 14 || rand == 15)
+            e.GetComponent<Enemy>().spawnNum = 4;
+
+
     }
 }
