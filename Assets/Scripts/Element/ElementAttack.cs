@@ -34,15 +34,26 @@ public class ElementAttack : MonoBehaviour
         attackTimer = attackDelay;
     }
 
+    public void init()
+    {
+        element = transform.parent.gameObject;
+        damage = element.GetComponent<UnitInfo>().damage;
+        attackDelay = element.GetComponent<UnitInfo>().attackDelay;
+        attackTimer = attackDelay;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
+        damage = element.GetComponent<UnitInfo>().damage;
+        attackDelay = element.GetComponent<UnitInfo>().attackDelay;
+
         if (transform.parent.gameObject.GetComponent<Element>().isRoad && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.ICEROAD && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.LEAFROAD && transform.parent.gameObject.GetComponent<Element>().elementType != ElementType.STONE)
             return;
 
         attackTimer += Time.deltaTime;
 
-        Debug.Log(attackDelay);
 
         if (target != null && target.GetComponent<Enemy>().hp <= 0)
         {

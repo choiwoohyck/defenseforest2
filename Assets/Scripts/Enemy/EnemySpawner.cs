@@ -32,6 +32,7 @@ public class EnemySpawner : MonoBehaviour
                 GameObject Enemy = Instantiate(FrankStein) as GameObject; 
                 Enemy.transform.position = spawnPosition[Random.Range(i*2, i*2+2)].transform.position;
                 Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
+                EnemyUnitManager.instance.enemyUnits.Add(Enemy);
             }
 
             for (int i = 4; i < 8; i++)
@@ -39,6 +40,7 @@ public class EnemySpawner : MonoBehaviour
                 GameObject Enemy = Instantiate(Zombie) as GameObject;
                 Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
                 Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
+                EnemyUnitManager.instance.enemyUnits.Add(Enemy);
             }
         }
 
@@ -55,13 +57,13 @@ public class EnemySpawner : MonoBehaviour
                     
                      for (int i = 0; i < 4; i++)
                      {
-                       
-                          GameObject Enemy = Instantiate(Zombie) as GameObject;
-                          int spawnNum = Random.Range(i * 2, i * 2 + 2);
-                          SetRoadNum(ref Enemy, spawnNum);  
-                          Enemy.transform.position = spawnPosition[spawnNum].transform.position;
-                          Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
-                     }
+                        GameObject Enemy = Instantiate(Zombie) as GameObject;
+                        int spawnNum = Random.Range(i * 2, i * 2 + 2);
+                        SetRoadNum(ref Enemy, spawnNum);  
+                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
+                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
+                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
+                    }
 
                     spawnTimer = 0;
                 }
@@ -80,6 +82,7 @@ public class EnemySpawner : MonoBehaviour
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
+                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
 
                     for (int i = 4; i < 8; i++)
@@ -90,6 +93,7 @@ public class EnemySpawner : MonoBehaviour
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
+                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
 
                     spawnTimer = 0;
@@ -109,6 +113,7 @@ public class EnemySpawner : MonoBehaviour
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
+                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
 
                     for (int i = 4; i < 8; i++)
@@ -119,6 +124,7 @@ public class EnemySpawner : MonoBehaviour
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
+                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
 
                     for (int i = 0; i < 2; i++)
@@ -129,6 +135,7 @@ public class EnemySpawner : MonoBehaviour
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                         Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
+                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
                     spawnTimer = 0;
                 }

@@ -13,14 +13,22 @@ public class DeadComponent : MonoBehaviour
 
     public Image deadBackGround;
     public Image playerDeadImage;
+    public Image stoneDeadImage;
+
 
     public Camera mainCamera;
     public Sprite[] playerDeadImages;
+
+    public Animator stoneAnimator;
+
     public TextMeshProUGUI RestartText;
     MoveController moveController;
     UnitInfo info;
 
     public bool fillBackgroundStart = false;
+    public bool isPlayerDead = true;
+    public bool alreadyWork = false;
+    bool isAnimFinsh = false;
 
     float fillBackgroundTimer = 0;
 
@@ -28,6 +36,8 @@ public class DeadComponent : MonoBehaviour
     {
         moveController = GetComponent<MoveController>();    
         info = GetComponent<UnitInfo>();
+        isPlayerDead = true;
+
     }
 
     // Update is called once per frame
@@ -35,59 +45,86 @@ public class DeadComponent : MonoBehaviour
     {
         if (!fillBackgroundStart) return;
 
-        if (mainCamera.orthographicSize >= 3)
-            mainCamera.orthographicSize -= Time.deltaTime * 2f;
-        
-          
+        if (isPlayerDead && GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            isAnimFinsh = true;
 
-        fillBackgroundTimer += Time.deltaTime;
-        deadBackGround.fillAmount = fillBackgroundTimer / 0.5f;
+        else if (!isPlayerDead && stoneAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && stoneAnimator.GetCurrentAnimatorStateInfo(0).IsName("dead"))
+        {
+            isAnimFinsh = true;
+            GameObject.Find("MagicStone").transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+        }
 
-        if (deadBackGround.fillAmount >= 1)
-            RestartText.gameObject.SetActive(true);
+        if (isAnimFinsh)
+        {
+            if (mainCamera.orthographicSize >= 3)
+                mainCamera.orthographicSize -= Time.deltaTime * 2f;
+            
+            fillBackgroundTimer += Time.deltaTime;
+            deadBackGround.fillAmount = fillBackgroundTimer / 2;
+
+            if (deadBackGround.fillAmount >= 1)
+            {
+                RestartText.gameObject.SetActive(true);
+                if (isPlayerDead)
+                    playerDeadImage.gameObject.SetActive(true);
+                else
+                    stoneDeadImage.gameObject.SetActive(true);
+
+                Time.timeScale = 0;
+            }
+
+        }
+
     }
 
     public void InitSetting()
     {
-        Animator animaotr = GetComponent<Animator>();
-        animaotr.SetBool("isDead", true);
-        AudioManager.instance.StopBGM();
-
-        deadBackGround.gameObject.SetActive(true);
-        playerDeadImage.gameObject.SetActive(true);
-
-        AllyUnitManager.instance.allyUnits.Remove(gameObject);
-
-        fillBackgroundStart = true;
-
-        float xDir = animaotr.GetFloat("xDir");
-        float yDir = animaotr.GetFloat("yDir");
-        Vector3 dir = moveController.moveDir;
-
-        SpriteRenderer renderer = playerDeadImage.GetComponent<SpriteRenderer>();
-
-        if (dir.x != 0 && dir.y != 0)
+        if (isPlayerDead)
         {
-            xDir = dir.x;
-            yDir = dir.y;
+            Animator animaotr = GetComponent<Animator>();
+            animaotr.SetBool("isDead", true);
+
+            float xDir = animaotr.GetFloat("xDir");
+            float yDir = animaotr.GetFloat("yDir");
+            Vector3 dir = moveController.moveDir;
+
+            SpriteRenderer renderer = playerDeadImage.GetComponent<SpriteRenderer>();
+
+            if (dir.x != 0 && dir.y != 0)
+            {
+                xDir = dir.x;
+                yDir = dir.y;
+            }
+
+            if ((int)xDir == 1)
+                playerDeadImage.sprite = playerDeadImages[0];
+            else if ((int)xDir == -1)
+                playerDeadImage.sprite = playerDeadImages[2];
+
+            else if ((int)yDir == 1)
+                playerDeadImage.sprite = playerDeadImages[1];
+            else if ((int)yDir == -1)
+                playerDeadImage.sprite = playerDeadImages[3];
+
         }
 
-        if ((int)xDir == 1)
-            playerDeadImage.sprite = playerDeadImages[0];
-        else if ((int)xDir == -1)
-            playerDeadImage.sprite = playerDeadImages[2];
+        else
+        {
+            mainCamera.GetComponent<CameraController>().isFollow = false;
+            stoneAnimator.SetBool("isDead", true);
+            mainCamera.transform.position = GameObject.Find("MagicStone").transform.position;
+        }
 
-        else if ((int)yDir == 1)
-            playerDeadImage.sprite = playerDeadImages[1];
-        else if ((int)yDir == -1)
-            playerDeadImage.sprite = playerDeadImages[3];
-
-
+        AudioManager.instance.StopBGM();
+        deadBackGround.gameObject.SetActive(true);
+        fillBackgroundStart = true;
+        
     }
 
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
     }
 }
  

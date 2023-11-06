@@ -311,7 +311,8 @@ public class Enemy : MonoBehaviour
         {
             if (target == GameObject.Find("MagicStone"))
             {
-                target.GetComponent<UnitInfo>().hp -= damage;
+                //target.GetComponent<UnitInfo>().hp -= damage;
+                target.GetComponent<UnitInfo>().DecreaseHP(damage);
                 noEnergy = true;
                 hp = 0;
                 isAttack = true;
@@ -345,8 +346,9 @@ public class Enemy : MonoBehaviour
         EnemyUnitManager.instance.enemyUnits.Remove(gameObject);
 
         if (target != null && target.CompareTag("Element"))
-            target.GetComponent<UnitInfo>().targetedNum--;  
+            target.GetComponent<UnitInfo>().targetedNum--;
 
+        EnemyUnitManager.instance.enemyUnits.Remove(gameObject);
         Destroy(gameObject);
     }
 

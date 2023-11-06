@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour
 
     public GameObject Player;
     public bool isBoss = false;
+    public bool isFollow = true;
     public float lerpSpeed = 0.5f;
     void Start()
     {
@@ -31,9 +32,12 @@ public class CameraController : MonoBehaviour
             yPos = 9.7f;
         }
 
-        Vector3 camPos = new Vector3(xPos, yPos, transform.position.z);
-        transform.position = camPos;
-        transform.position = Vector3.Lerp(transform.position, camPos, Time.deltaTime * lerpSpeed);
+        if (isFollow)
+        {
+            Vector3 camPos = new Vector3(xPos, yPos, transform.position.z);
+            transform.position = camPos;
+            transform.position = Vector3.Lerp(transform.position, camPos, Time.deltaTime * lerpSpeed);
+        }
     }
 
     private void ResolutionFix()

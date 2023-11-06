@@ -49,6 +49,7 @@ public class MiddleBoss : MonoBehaviour
     {
        info = GetComponent<UnitInfo>();
        state = MiddleBossState.IDLE;
+       EnemyUnitManager.instance.enemyUnits.Add(gameObject);
     }
 
     void init()

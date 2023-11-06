@@ -38,11 +38,11 @@ public class Element : MonoBehaviour
         if (type == ElementType.FIRE)
             gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.5f, 25);
         if (type == ElementType.ICE)
-            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.1f, 20);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.3f, 20);
         if (type == ElementType.ICEROAD)
-            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.5f, 20);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 20);
         if (type == ElementType.LEAF)
-            gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 100);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 25);
         if (type == ElementType.LEAFROAD)
         {
             gameObject.GetComponent<UnitInfo>().StatusInit(50, 2.5f, 20);
@@ -125,8 +125,8 @@ public class Element : MonoBehaviour
                             elementType = ElementType.LEAFROAD;
 
 
-
-                        AllyUnitManager.instance.allyUnits.Add(gameObject);
+                    transform.GetChild(0).gameObject.GetComponent<ElementAttack>().init();
+                    AllyUnitManager.instance.allyUnits.Add(gameObject);
                             isRoad = true;
                     }
 

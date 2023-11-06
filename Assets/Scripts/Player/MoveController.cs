@@ -22,12 +22,16 @@ public class MoveController : MonoBehaviour
     Animator animator;
     UnitInfo info;
 
+
     // Start is called before the first frame update
     void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         info = GetComponent<UnitInfo>();
+        Time.timeScale = 1f;
+
+
     }
 
     // Update is called once per frame

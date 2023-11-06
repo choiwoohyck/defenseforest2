@@ -50,13 +50,34 @@ public class UnitInfo : MonoBehaviour
        
         if (!isInvincible)
         {
-            isInvincible = true;
-            GetComponent<HitObject>().ChangeColor();
+            if (!gameObject.CompareTag("MagicStone"))
+            {
+                isInvincible = true;
+                GetComponent<HitObject>().ChangeColor();
+            }
+
             hp -= damage;
 
             if (hp <= 0 && gameObject.CompareTag("Player"))
             {
-                gameObject.GetComponent<DeadComponent>().InitSetting();
+                if (!gameObject.GetComponent<DeadComponent>().alreadyWork)
+                {
+                    gameObject.GetComponent<DeadComponent>().InitSetting();
+                    gameObject.GetComponent<DeadComponent>().alreadyWork = true;
+                }
+            }
+
+            if (hp <= 0 && gameObject.CompareTag("MagicStone"))
+            {
+
+                GameObject.Find("player").GetComponent<DeadComponent>().isPlayerDead = false;
+
+                if (!GameObject.Find("player").GetComponent<DeadComponent>().alreadyWork)
+                {
+                    GameObject.Find("player").GetComponent<DeadComponent>().InitSetting();
+                    GameObject.Find("player").GetComponent<DeadComponent>().alreadyWork = true;
+                }
+                
             }
         }
 
