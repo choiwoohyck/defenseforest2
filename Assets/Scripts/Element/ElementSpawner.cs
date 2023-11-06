@@ -37,6 +37,8 @@ public class ElementSpawner : MonoBehaviour
     }
     public void SpawnFireElement()
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
         if (GameManager.instance.energy < 100) return;
 
         if (!AllyUnitManager.instance.alreadyClick)
@@ -52,6 +54,8 @@ public class ElementSpawner : MonoBehaviour
 
     public void SpawnIceElement()
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
         if (GameManager.instance.energy < 150) return;
 
         if (!AllyUnitManager.instance.alreadyClick)
@@ -67,6 +71,8 @@ public class ElementSpawner : MonoBehaviour
 
     public void SpawnLeafElement()
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
         if (GameManager.instance.energy < 200) return;
 
         if (!AllyUnitManager.instance.alreadyClick)
@@ -82,6 +88,8 @@ public class ElementSpawner : MonoBehaviour
 
     public void SpawnStoneElement()
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
         if (GameManager.instance.energy < 200) return;
 
         if (!AllyUnitManager.instance.alreadyClick)

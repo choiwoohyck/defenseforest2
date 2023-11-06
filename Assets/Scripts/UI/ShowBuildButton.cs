@@ -59,7 +59,9 @@ public class ShowBuildButton : MonoBehaviour
     public void BuildButtonClick()
     {
         if (GameManager.instance.inActiveBuildButton) return;
+        if (UIManager.instance.SettingUI.activeSelf) return;
 
+        else
         AudioManager.instance.PlayOnShotSFX(2);
 
         StartCoroutine("BuildUIUpDown");
@@ -118,9 +120,14 @@ public class ShowBuildButton : MonoBehaviour
 
     public void ElementButtonClick(int order)
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
+
         AudioManager.instance.PlayOnShotSFX(2);
 
-        switch(order)
+        if (GameManager.instance.inActiveBuildButton) return;
+
+        switch (order)
         {
             case 0:
                 SelectBorder.rectTransform.anchoredPosition = new Vector2(-374.1f, -18.4f);
@@ -143,6 +150,8 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterFireButton()
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
         DescriptionUI.SetActive(true);
         DescriptionName.text = "불꽃 정령";
         DescriptionImage.sprite = DescriptionImages[0];
@@ -154,6 +163,8 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterICEButton()
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
         DescriptionUI.SetActive(true);
         DescriptionName.text = "얼음 정령";
         DescriptionImage.sprite = DescriptionImages[1];
@@ -165,6 +176,8 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterLeafButton()
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
         DescriptionUI.SetActive(true);
         DescriptionName.text = "풀 정령";
         DescriptionImage.sprite = DescriptionImages[2];
@@ -176,6 +189,8 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterStoneButton()
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
         DescriptionUI.SetActive(true);
         DescriptionName.text = "바위 정령";
         DescriptionImage.sprite = DescriptionImages[3];

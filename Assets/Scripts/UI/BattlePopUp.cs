@@ -71,6 +71,8 @@ public class BattlePopUp : MonoBehaviour
 
     public void ClickBattleButton()
     {
+        if (UIManager.instance.SettingUI.activeSelf) return;
+
         ActiveBackground(true);
         battlePopUpUI.SetActive(true);
         AudioManager.instance.PlayOnShotSFX(2);

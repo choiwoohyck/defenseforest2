@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     public GameObject energyText;
     public GameObject buildButton;
     public GameObject battleButton;
+    public GameObject SettingUI;
 
     public Image fadeImg; // fade에 쓸 이미지
     public Image DayBarFillImage;
@@ -122,6 +123,8 @@ public class UIManager : MonoBehaviour
         }
 
         energyText.GetComponent<TextMeshProUGUI>().text = GameManager.instance.energy.ToString();
+
+        GameManager.instance.inActiveBuildButton = SettingUI.activeSelf;
     }
 
     
@@ -132,5 +135,17 @@ public class UIManager : MonoBehaviour
         clearUI.SetActive(true);
         yield return new WaitForSeconds(3f);
         clearUI.SetActive(false);
+    }
+
+    public void ClickQuitButton()
+    {
+        SettingUI.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+    public void  ClickPauseButton()
+    {
+        SettingUI.SetActive(!SettingUI.activeSelf);
+        Time.timeScale = Time.timeScale == 0f ? 1.0f : 0f;
     }
 }

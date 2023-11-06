@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource BGMSource;
     public AudioSource SFXSource;
     public AudioSource WALKSFXSource;
+    public AudioMixer mixer;
 
 
     [Header("BGM")]
@@ -32,6 +34,16 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SetSFX(float sliderVal)
+    {
+        mixer.SetFloat("SFX", Mathf.Log10(sliderVal) * 20);
+    }
+
+    public void SetBGM(float sliderVal)
+    {
+        mixer.SetFloat("BGM", Mathf.Log10(sliderVal) * 20);
     }
 
     public void ChangeBGM(int BGMNum)
