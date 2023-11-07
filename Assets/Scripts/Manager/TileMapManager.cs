@@ -19,6 +19,7 @@ public class TileMapManager : MonoBehaviour
     public Tilemap map;
     public BuildTile[,] tiles = new BuildTile[28,18];
     public List<TileData> tileDatas;
+    public int playerRoadNum;
 
     private void Awake()
     {
@@ -49,16 +50,15 @@ public class TileMapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButton(0))
-        {
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int gridPosition = map.WorldToCell(mousePosition);
-            int x = (int)TileMapManager.instance.mapPostion().x + 13;
-            int y = (int)(14 - TileMapManager.instance.mapPostion().y);
-            Debug.Log("x : " + x + ", y : " + y); 
-            TileBase clickedTile = map.GetTile(gridPosition);            
-        }
+ 
+        Vector3 playerPos = GameObject.Find("player").transform.position;
+        Vector3Int gridPosition = map.WorldToCell(playerPos);
+        int x = gridPosition.x + 13;
+        int y = 14 - gridPosition.y;
 
+        playerRoadNum = tiles[x, y].roadNum;
+        //Debug.Log(playerRoadNum);
+        isPlayerRoad();
     }
 
     public Vector3 mapPostion()
@@ -100,7 +100,7 @@ public class TileMapManager : MonoBehaviour
         Vector3Int gridPosition = map.WorldToCell(playerPos);
         int x = gridPosition.x+13;
         int y = 14-gridPosition.y;
-
+        Debug.Log("isplayerRoad " +tiles[x, y].isRoad);
         return tiles[x, y].isRoad;
     }
 

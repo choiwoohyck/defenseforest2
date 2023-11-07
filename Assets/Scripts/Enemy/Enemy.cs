@@ -79,9 +79,10 @@ public class Enemy : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {             
+    {
+        Debug.Log(target == GameObject.Find("player") && (!(TileMapManager.instance.isPlayerRoad()) || TileMapManager.instance.playerRoadNum != spawnNum));
 
-        if (target == GameObject.Find("player") && !TileMapManager.instance.isPlayerRoad())
+        if (target == GameObject.Find("player") && (!(TileMapManager.instance.isPlayerRoad()) || TileMapManager.instance.playerRoadNum  != spawnNum))
         {
             target = null;
             EnterState(EnemyState.SEARCH);
@@ -89,8 +90,6 @@ public class Enemy : MonoBehaviour
 
         if (hp <= 0 && !isDead)
         {
-      
-                
             StartCoroutine("Die");
             isDead = true;
         }
@@ -118,10 +117,10 @@ public class Enemy : MonoBehaviour
             float minDistance = Vector3.Distance(transform.position, target.transform.position);
             foreach (var ally in AllyUnitManager.instance.allyUnits)
             {
-
+                Debug.Log(ally);
                 if (target == ally || ally.GetComponent<UnitInfo>().hp <= 0) continue;
-                if (ally.CompareTag("Player") && !TileMapManager.instance.isPlayerRoad()) continue;
-                if (!ally.CompareTag("MagicStone") && ally.GetComponent<UnitInfo>().roadNum != spawnNum) continue;
+                if (ally.CompareTag("Player") && (!TileMapManager.instance.isPlayerRoad() || TileMapManager.instance.playerRoadNum != spawnNum)) continue;
+                if (ally.CompareTag("Element") && ally.GetComponent<UnitInfo>().roadNum != spawnNum) continue;
                 if (ally.GetComponent<UnitInfo>().targetedNum >= 2) continue;
 
                 float distance = Vector3.Distance(transform.position, ally.transform.position);
@@ -132,9 +131,8 @@ public class Enemy : MonoBehaviour
                     {
                         Debug.Log(target + " " + ally);
                         target = ally;
-                    
+                        minDistance = distance;
                     }
-                    minDistance = distance;
                 }
             }
 
@@ -158,12 +156,23 @@ public class Enemy : MonoBehaviour
         {
             searchTimer += Time.deltaTime;
 
-            if (searchTimer >= 1f)
+            //if (!target.CompareTag("Player") && TileMapManager.instance.isPlayerRoad() && TileMapManager.instance.playerRoadNum == spawnNum)
+            //{
+            //    float distance = Vector3.Distance(transform.position, target.transform.position);
+
+            //    if (distance > Vector3.Distance(transform.position, GameObject.Find("player").transform.position))
+            //    {
+            //        target = GameObject.Find("player");
+            //        searchTimer = 0;
+            //    }
+            //}
+
+            if (searchTimer >= 0.5f)
             {
                 if (target.CompareTag("Element"))
                     target.GetComponent<UnitInfo>().targetedNum--;
 
-                    ChangeState(EnemyState.SEARCH);
+                ChangeState(EnemyState.SEARCH);
                 searchTimer = 0;
             }
 
@@ -190,17 +199,16 @@ public class Enemy : MonoBehaviour
                 direction = (target.transform.position - transform.position).normalized;
                 searchTimer += Time.deltaTime;
 
-                Debug.DrawRay(transform.position, direction * 0.35f, new Color(0, 1, 0));
-                RaycastHit2D[] rayHits = Physics2D.RaycastAll(transform.position, direction, 0.35f);
-                foreach (RaycastHit2D rayHit in rayHits)
-                {
-                    if (rayHit.collider.gameObject.CompareTag("Enemy") && rayHit.collider.gameObject != gameObject)
-                    {
-                        ChangeState(EnemyState.READY);
-                        animator.SetBool("isReady", true);
-
-                    }
-                }
+                //Debug.DrawRay(transform.position, direction * 0.35f, new Color(0, 1, 0));
+                //RaycastHit2D[] rayHits = Physics2D.RaycastAll(transform.position, direction, 0.35f);
+                //foreach (RaycastHit2D rayHit in rayHits)
+                //{
+                //    if (rayHit.collider.gameObject.CompareTag("Enemy") && rayHit.collider.gameObject != gameObject)
+                //    {
+                //        ChangeState(EnemyState.READY);
+                //        animator.SetBool("isReady", true);
+                //    }
+                //}
             }
 
             else

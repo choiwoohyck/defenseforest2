@@ -22,28 +22,20 @@ public class EnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (stop) return;
-
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            for (int i = 0; i < 4; i++)
-            {
-                GameObject Enemy = Instantiate(FrankStein) as GameObject; 
-                Enemy.transform.position = spawnPosition[Random.Range(i*2, i*2+2)].transform.position;
-                Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
-                EnemyUnitManager.instance.enemyUnits.Add(Enemy);
-            }
 
-            for (int i = 4; i < 8; i++)
-            {
+           
                 GameObject Enemy = Instantiate(Zombie) as GameObject;
-                Enemy.transform.position = spawnPosition[Random.Range(i * 2, i * 2 + 2)].transform.position;
+                int spawnNum = Random.Range(0,12);
+                Enemy.transform.position = spawnPosition[spawnNum].transform.position;
+                SetRoadNum(ref Enemy, spawnNum);
                 Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                 EnemyUnitManager.instance.enemyUnits.Add(Enemy);
-            }
         }
 
+        if (stop) return;
 
         if (GameManager.instance.isGameTurn && !stop)
         {
