@@ -47,21 +47,21 @@ public class BulletManager : MonoBehaviour
 
     }
 
-    public void GetObject(Vector2 b_startPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type,float damage, GameObject target, GameObject owner = null, bool isDivided = false, int divideNum = 0)
-    {
-        GameObject returnObj = Instantiate(bulletPrefab[(int)o_type]) as GameObject;
+    //public void GetObject(Vector2 b_startPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type,float damage, GameObject target, GameObject owner = null, bool isDivided = false, int divideNum = 0)
+    //{
+    //    GameObject returnObj = Instantiate(bulletPrefab[(int)o_type]) as GameObject;
         
 
-        returnObj.GetComponent<Bullet>().Init(b_startPos, b_Speed, b_rotVec, o_type,damage,target);
-        returnObj.transform.SetParent(null);
-        returnObj.gameObject.SetActive(true);
+    //    returnObj.GetComponent<Bullet>().Init(b_startPos, b_Speed, b_rotVec, o_type,damage,target);
+    //    returnObj.transform.SetParent(null);
+    //    returnObj.gameObject.SetActive(true);
 
-        if (o_type == OwnerType.LEAFELEMENT)
-            returnObj.GetComponent<Bullet>().SetOwner(owner);
+    //    if (o_type == OwnerType.LEAFELEMENT)
+    //        returnObj.GetComponent<Bullet>().SetOwner(owner);
 
-    }
+    //}
 
-    public GameObject GetPooledObject(Vector2 b_startPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type, float damage, GameObject target, GameObject owner = null)
+    public GameObject GetPooledObject(Vector2 b_startPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type, float damage, GameObject target, GameObject owner = null, bool isDivided = false, int divideNum = 0)
     {
         if (pooledObjects.ContainsKey(o_type))
         {
@@ -70,7 +70,7 @@ public class BulletManager : MonoBehaviour
                 if (!pooledObjects[o_type][i].activeSelf)
                 {
 
-                    pooledObjects[o_type][i].GetComponent<Bullet>().Init(b_startPos, b_Speed, b_rotVec, o_type, damage, target);
+                    pooledObjects[o_type][i].GetComponent<Bullet>().Init(b_startPos, b_Speed, b_rotVec, o_type, damage, target,isDivided,divideNum);
                     pooledObjects[o_type][i].transform.SetParent(null);
                     pooledObjects[o_type][i].gameObject.SetActive(true);
 
@@ -84,7 +84,7 @@ public class BulletManager : MonoBehaviour
             int beforeCreateCount = pooledObjects[o_type].Count;
 
             CreateMultiplePoolObjects();
-            pooledObjects[o_type][beforeCreateCount].GetComponent<Bullet>().Init(b_startPos, b_Speed, b_rotVec, o_type, damage, target);
+            pooledObjects[o_type][beforeCreateCount].GetComponent<Bullet>().Init(b_startPos, b_Speed, b_rotVec, o_type, damage, target, isDivided, divideNum);
             pooledObjects[o_type][beforeCreateCount].transform.SetParent(null);
             pooledObjects[o_type][beforeCreateCount].gameObject.SetActive(true);
 

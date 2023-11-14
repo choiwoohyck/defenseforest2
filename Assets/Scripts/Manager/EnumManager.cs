@@ -62,7 +62,8 @@ namespace EnumManagerSpace
         IDLE,
         PUNCH,
         DRILL,
-        SPAWN
+        SPAWN,
+        DIVIDESHOOT
     }
 
     public enum EffectType

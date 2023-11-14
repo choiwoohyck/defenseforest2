@@ -34,6 +34,7 @@ public class FinalBoss : MonoBehaviour
     bool isFakeDrill = false;
     bool isRushStop = false;
     bool isReturnRush = false;
+    bool canDivideShoot = false;
     public bool isActive = true;
 
 
@@ -41,6 +42,7 @@ public class FinalBoss : MonoBehaviour
     public int punchCnt = 0;
     int drillStopnCnt = 0;
     int miniBombCnt = 0;
+    int divideShootCnt = 0;
 
     float shakeIntensity = 0f;
     float punchTimer = 0f;
@@ -56,6 +58,7 @@ public class FinalBoss : MonoBehaviour
     float minibombPatternDurationTimer = 0f;
 
     float moveSpeed = 3.5f;
+    float divideShootTimer = 0f;
 
     Vector3 deadPosition;
     Vector3 drillStartPosition;
@@ -141,7 +144,6 @@ public class FinalBoss : MonoBehaviour
             if (patternTimer >= patterCoolDownTime)
             {
                 ChangePattern();
-                Debug.Log("씨이발2");
 
                 isWait = true;
                 patternTimer = 0;
@@ -152,11 +154,9 @@ public class FinalBoss : MonoBehaviour
 
         if (isWait)
         {
-
             waitTimer += Time.deltaTime;
             if (state == FinalBossState.PUNCH || state == FinalBossState.DRILL)
                 transform.position = new Vector3(transform.position.x,Player.transform.position.y,transform.position.z);
-
 
             if (waitTimer >= 1f)
             {
@@ -173,7 +173,14 @@ public class FinalBoss : MonoBehaviour
                 if (state == FinalBossState.SPAWN)
                 {
                     animator.SetBool("isSpawn", true);
+                }
 
+                if (state == FinalBossState.DIVIDESHOOT)
+                {
+                    animator.SetBool("isDivideShoot",true);
+                    canDivideShoot = true;
+                    divideShootCnt++;
+                    divideShootTimer = 0f;
                 }
 
                 Debug.Log("웨잇 끝나고 애니메이션 전환");
@@ -183,14 +190,23 @@ public class FinalBoss : MonoBehaviour
             }
         }
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Punch") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 11/15f)
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Punch") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 11/15f && state == FinalBossState.PUNCH)
         {
             if (!isPause)
             {
                 animator.speed = 0;
                 isPause = true;
                 isPunch = true;
+            }
+        }
 
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("DivideShoot") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 11 / 15f)
+        {
+            if (!isPause)
+            {
+                animator.speed = 0;
+                isPause = true;
+                canDivideShoot = true;
             }
         }
 
@@ -263,6 +279,35 @@ public class FinalBoss : MonoBehaviour
             {
                 isMiddlePunch = true;
                 punchCnt = 0;
+            }
+        }
+
+        if (canDivideShoot)
+        {
+            GameObject Bullet = BulletManager.instance.GetPooledObject(transform.position + new Vector3(0.9f, 0.78f), 7f, new Vector2(1, 1), OwnerType.FINALBOSS, 15f, null,null,true,0);
+            canDivideShoot = false;
+          
+        }
+
+        if (state == FinalBossState.DIVIDESHOOT)
+        {
+            divideShootTimer += Time.deltaTime;
+
+            if (divideShootTimer >= 2f)
+            {
+                divideShootTimer = 0;
+                canDivideShoot = true;
+                divideShootCnt++;
+                animator.Play("SpawnBomb", -1, 0f);
+
+            }
+
+            if (divideShootCnt > 2)
+            {
+                divideShootCnt = 0;
+                state = FinalBossState.IDLE;
+                animator.SetBool("isDivideShoot", false);
+                isPause = false;
             }
         }
 
@@ -400,7 +445,6 @@ public class FinalBoss : MonoBehaviour
             minibombPatternDurationTimer += Time.deltaTime;
             if (minibombPatternDurationTimer >= 10f)
             {
-                Debug.Log("씨이발");
                 shield.SetActive(false);
                 animator.SetBool("isSpawn", false);
                 state = FinalBossState.IDLE;
@@ -416,11 +460,8 @@ public class FinalBoss : MonoBehaviour
     void ChangePattern()
     {
         int randomStateNum = Random.Range(1, 4);
-        
+        randomStateNum = 4;
         state = (FinalBossState)randomStateNum;
-
-        Debug.Log("씨이발3");
-
     }
 
     IEnumerator Die()

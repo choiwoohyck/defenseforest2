@@ -20,6 +20,7 @@ public class Bullet : MonoBehaviour
 
 
     public float damage = 1f;
+    float dividedTimer = 0f;
 
     private Vector2 rotVec = Vector2.zero;
     private Vector2 startPos = Vector2.zero;
@@ -32,8 +33,9 @@ public class Bullet : MonoBehaviour
 
     bool isHit = false;
     bool isDivided = false;
+    bool isMakeChild = false;
 
-    int divideNum = 0;
+    public int divideNum = 0;
 
     GameObject owner;
     GameObject target;
@@ -55,14 +57,9 @@ public class Bullet : MonoBehaviour
         {
             float bulletAngle = (transform.rotation.z+180) * Mathf.Deg2Rad;
 
-            //if (target == null)
-            //    bulletDirection = new Vector2(Mathf.Cos(bulletAngle), Mathf.Sin(bulletAngle));
-            //else
-            //{
-            //    bulletDirection = target.transform.position - transform.position;
-            //    bulletDirection.Normalize();
-            //}
-   
+            bulletDirection = new Vector2(Mathf.Cos(bulletAngle), Mathf.Sin(bulletAngle));
+            transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
+
         }
 
         if (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2)
@@ -87,9 +84,36 @@ public class Bullet : MonoBehaviour
                     bulletAngle = 0f;
                     finalBossRandomAngleOffset = finalBossRandomOriginAngleOffset;
                 }
+              
 
                 transform.position = new Vector3(xPos, yPos, transform.position.z);
 
+            }
+
+            else
+            {
+                dividedTimer += Time.deltaTime;
+
+                if (dividedTimer >= 0.5f && !isMakeChild && divideNum < 8)
+                {
+                    int childDivideNum = divideNum + 1;
+
+                    if (divideNum != 0)
+                        childDivideNum += 2;
+
+                    GameObject upBullet = BulletManager.instance.GetPooledObject(transform.position + new Vector3(0.9f, 0.78f), 7f, new Vector2(1, 1), OwnerType.FINALBOSS, 15f, null, null, true, childDivideNum);
+                    upBullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, transform.rotation.z + 25f);
+
+                    GameObject downBullet = BulletManager.instance.GetPooledObject(transform.position + new Vector3(0.9f, 0.78f), 7f, new Vector2(1, 1), OwnerType.FINALBOSS, 15f, null, null, true, ++childDivideNum);
+                    downBullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, transform.rotation.z - 25f);
+
+                    isMakeChild = true;
+                }
+
+                float bulletAngle = (transform.rotation.z) * Mathf.Deg2Rad;
+
+                bulletDirection = new Vector2(Mathf.Cos(bulletAngle), Mathf.Sin(bulletAngle));
+                transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
             }
         }
     }
@@ -170,6 +194,7 @@ public class Bullet : MonoBehaviour
                 EffectManager.instance.CreateEffect(EffectType.BULLET1HITWALL, transform.position, transform.rotation);
             if (type == OwnerType.ROADICEELEMENT)
                 EffectManager.instance.CreateEffect(EffectType.ICICLE, transform.position, transform.rotation);
+
 
         }
 
