@@ -47,7 +47,7 @@ public class BulletManager : MonoBehaviour
 
     }
 
-    public void GetObject(Vector2 b_startPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type,float damage, GameObject target, GameObject owner = null)
+    public void GetObject(Vector2 b_startPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type,float damage, GameObject target, GameObject owner = null, bool isDivided = false, int divideNum = 0)
     {
         GameObject returnObj = Instantiate(bulletPrefab[(int)o_type]) as GameObject;
         

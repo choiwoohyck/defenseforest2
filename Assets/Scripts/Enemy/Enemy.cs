@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject target;
+    public GameObject prevTarget;
+
 
     MonsterType type;
     public EnemyState state = EnemyState.SEARCH;
@@ -31,6 +33,7 @@ public class Enemy : MonoBehaviour
 
     bool isAttack = false;
     bool isRush = false;
+    bool isFirstTarget = false;
 
 
     float searchTimer = 0;
@@ -114,6 +117,8 @@ public class Enemy : MonoBehaviour
         if (currentState == EnemyState.SEARCH)
         {
             target = GameObject.Find("MagicStone");
+            direction = (target.transform.position  - transform.position).normalized;
+
             float minDistance = Vector3.Distance(transform.position, target.transform.position);
             foreach (var ally in AllyUnitManager.instance.allyUnits)
             {
@@ -141,6 +146,11 @@ public class Enemy : MonoBehaviour
                 target.GetComponent<UnitInfo>().targetedNum++;
             }
 
+            if (spawnNum == 1 || spawnNum == 3)
+                direction = (target.transform.position + new Vector3(0, Random.Range(-0.5f, 0.5f)) - transform.position);
+            else if (spawnNum == 2 || spawnNum == 4)
+                direction = (target.transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0) - transform.position);
+
             ChangeState(EnemyState.RUN);
         }
     }
@@ -156,6 +166,7 @@ public class Enemy : MonoBehaviour
         {
             searchTimer += Time.deltaTime;
 
+            /*
             //if (!target.CompareTag("Player") && TileMapManager.instance.isPlayerRoad() && TileMapManager.instance.playerRoadNum == spawnNum)
             //{
             //    float distance = Vector3.Distance(transform.position, target.transform.position);
@@ -165,13 +176,14 @@ public class Enemy : MonoBehaviour
             //        target = GameObject.Find("player");
             //        searchTimer = 0;
             //    }
-            //}
+            //}*/
 
             if (searchTimer >= 0.5f)
             {
                 if (target.CompareTag("Element"))
                     target.GetComponent<UnitInfo>().targetedNum--;
 
+                prevTarget = target;
                 ChangeState(EnemyState.SEARCH);
                 searchTimer = 0;
             }
@@ -194,29 +206,30 @@ public class Enemy : MonoBehaviour
 
 
             // 앞에 다른 적있을때 멈추는 코드
-            if (!isRush)
+            if (!isRush && target == GameObject.Find("MagicStone"))
             {
-                direction = (target.transform.position - transform.position).normalized;
+                //direction = (target.transform.position - transform.position).normalized;
                 searchTimer += Time.deltaTime;
 
-                //Debug.DrawRay(transform.position, direction * 0.35f, new Color(0, 1, 0));
-                //RaycastHit2D[] rayHits = Physics2D.RaycastAll(transform.position, direction, 0.35f);
-                //foreach (RaycastHit2D rayHit in rayHits)
-                //{
-                //    if (rayHit.collider.gameObject.CompareTag("Enemy") && rayHit.collider.gameObject != gameObject)
-                //    {
-                //        ChangeState(EnemyState.READY);
-                //        animator.SetBool("isReady", true);
-                //    }
-                //}
+                Debug.DrawRay(transform.position, direction * 0.35f, new Color(0, 1, 0));
+                RaycastHit2D[] rayHits = Physics2D.RaycastAll(transform.position, direction, 0.35f);
+                foreach (RaycastHit2D rayHit in rayHits)
+                {
+                    if (rayHit.collider.gameObject.CompareTag("Enemy") && rayHit.collider.gameObject != gameObject)
+                    {
+                        ChangeState(EnemyState.READY);
+                        animator.SetBool("isReady", true);
+                    }
+                }
             }
 
-            else
+            else if (isRush)
             {
                 rushTimer += Time.deltaTime;
                 moveSpeed = originMoveSpeed * 1.75f;
 
                 //transform.position += direction * moveSpeed * Time.deltaTime;
+
                 rigidbody2D.MovePosition(rigidbody2D.position + new Vector2(direction.x,direction.y) * moveSpeed * Time.fixedDeltaTime);
                 rigidbody2D.velocity = Vector3.zero;
                 rigidbody2D.angularVelocity = 0;
@@ -383,6 +396,7 @@ public class Enemy : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
+            if (collision.gameObject.GetComponent<UnitInfo>().isInvincible || collision.gameObject.GetComponent<UnitInfo>().hp <= 0) return;
 
             collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
             collider2D.isTrigger = true;

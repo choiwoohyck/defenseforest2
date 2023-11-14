@@ -45,7 +45,7 @@ public class DeadComponent : MonoBehaviour
     {
         if (!fillBackgroundStart) return;
 
-        if (isPlayerDead && GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        if (isPlayerDead)
             isAnimFinsh = true;
 
         else if (!isPlayerDead && stoneAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && stoneAnimator.GetCurrentAnimatorStateInfo(0).IsName("dead"))
@@ -105,6 +105,9 @@ public class DeadComponent : MonoBehaviour
                 playerDeadImage.sprite = playerDeadImages[1];
             else if ((int)yDir == -1)
                 playerDeadImage.sprite = playerDeadImages[3];
+
+
+            Debug.Log("플레이어 뒤짐2");
 
         }
 

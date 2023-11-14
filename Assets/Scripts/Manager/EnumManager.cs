@@ -57,6 +57,14 @@ namespace EnumManagerSpace
         MACHINEGUN
     }
 
+    public enum FinalBossState
+    {
+        IDLE,
+        PUNCH,
+        DRILL,
+        SPAWN
+    }
+
     public enum EffectType
     {
         BULLET1HIT,
@@ -67,7 +75,9 @@ namespace EnumManagerSpace
         LEAFATTACK,
         GATHERINGENERGY,
         TELEPORT,
-        MIDDLEBOSSBULLETHIT
+        MIDDLEBOSSBULLETHIT,
+        FINALBOSSBULLETHIT,
+        MINIBOMBEXPLOSION
     };
 
     public enum OwnerType
@@ -80,6 +90,7 @@ namespace EnumManagerSpace
         ROADLEAFELEMENT,
         MIDDLEBOSS,
         MIDDLEBOSS2,
+        FINALBOSS,
         ENEMY
     }
 }

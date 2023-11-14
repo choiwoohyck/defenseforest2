@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
     public GameObject MiddleBoss;
 
     float changeTimer = 0f;
+
     public bool changeTimerOn = false;
     public bool fadein;
 
@@ -45,6 +46,7 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (changeTimerOn)
         {
             fadein = true;

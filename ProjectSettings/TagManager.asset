@@ -10,6 +10,7 @@ TagManager:
   - Element
   - Boss
   - MagicStone
+  - Bomb
   layers:
   - Default
   - TransparentFX

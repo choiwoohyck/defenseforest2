@@ -70,6 +70,12 @@ public class TileMapManager : MonoBehaviour
         return gridPosition;
     }
 
+    public Vector3 ChangeTilePosionToRealPosition(Vector2 pos)
+    {
+        Vector3 returnPos = new Vector3(pos.x-12.5f, 14.5f-pos.y,0);
+        return returnPos;
+    }
+
     public bool isBuild()
     {
         int x = (int)TileMapManager.instance.mapPostion().x + 13;

@@ -64,6 +64,8 @@ public class UnitInfo : MonoBehaviour
                 {
                     gameObject.GetComponent<DeadComponent>().InitSetting();
                     gameObject.GetComponent<DeadComponent>().alreadyWork = true;
+
+                    Debug.Log("플레이어 뒤짐");
                 }
             }
 

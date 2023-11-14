@@ -14,6 +14,11 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     public float bulletAngle = 0;
 
+    public float finalBossRandomYOffset;
+    public float finalBossRandomAngleOffset;
+    public float finalBossRandomOriginAngleOffset;
+
+
     public float damage = 1f;
 
     private Vector2 rotVec = Vector2.zero;
@@ -26,6 +31,9 @@ public class Bullet : MonoBehaviour
     Animator animator;
 
     bool isHit = false;
+    bool isDivided = false;
+
+    int divideNum = 0;
 
     GameObject owner;
     GameObject target;
@@ -54,8 +62,7 @@ public class Bullet : MonoBehaviour
             //    bulletDirection = target.transform.position - transform.position;
             //    bulletDirection.Normalize();
             //}
-            bulletDirection = new Vector2(Mathf.Cos(bulletAngle), Mathf.Sin(bulletAngle));
-            transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
+   
         }
 
         if (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2)
@@ -66,9 +73,28 @@ public class Bullet : MonoBehaviour
             bulletDirection = new Vector2(1, 1);
             transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
         }
+
+        if (type == OwnerType.FINALBOSS)
+        {
+            if (!isDivided)
+            {
+                bulletAngle += Time.deltaTime * finalBossRandomAngleOffset;
+                finalBossRandomAngleOffset += Time.deltaTime;
+                float xPos = transform.position.x + bulletSpeed * Time.deltaTime;
+                float yPos = transform.position.y + Mathf.Sin(bulletAngle) * finalBossRandomYOffset * Time.deltaTime;
+                if (bulletAngle >= 180)
+                {
+                    bulletAngle = 0f;
+                    finalBossRandomAngleOffset = finalBossRandomOriginAngleOffset;
+                }
+
+                transform.position = new Vector3(xPos, yPos, transform.position.z);
+
+            }
+        }
     }
 
-    public void Init(Vector2 b_stratPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type,float b_damage,GameObject b_target)
+    public void Init(Vector2 b_stratPos, float b_Speed, Vector2 b_rotVec, OwnerType o_type,float b_damage,GameObject b_target, bool b_isDivided = false, int b_divideNum = 0)
     {
         transform.position = b_stratPos;
         bulletSpeed = b_Speed;
@@ -76,7 +102,10 @@ public class Bullet : MonoBehaviour
         type = o_type;
         damage = b_damage;
         target = b_target;
-        if (type != OwnerType.MIDDLEBOSS && type != OwnerType.MIDDLEBOSS2) 
+        isDivided = b_isDivided;
+        divideNum = b_divideNum;
+
+        if (type != OwnerType.MIDDLEBOSS && type != OwnerType.MIDDLEBOSS2 && type != OwnerType.FINALBOSS) 
         transform.rotation = Quaternion.Euler(0,0,Mathf.Atan2(rotVec.y,rotVec.x) * Mathf.Rad2Deg + 180);
     }
 
@@ -157,7 +186,7 @@ public class Bullet : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player") && (type ==OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2))
         {
-            if (collision.GetComponent<UnitInfo>().isInvincible) return;
+            if (collision.GetComponent<UnitInfo>().isInvincible || collision.GetComponent<UnitInfo>().hp <= 0) return;
 
             collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
 
@@ -178,6 +207,25 @@ public class Bullet : MonoBehaviour
 
         if (collision.gameObject.CompareTag("MagicStone") && (type == OwnerType.PLAYER))
         {
+            EffectManager.instance.CreateEffect(EffectType.BULLET1HIT, transform.position, transform.rotation);
+            BulletManager.instance.ReturnObject(gameObject);
+
+        }
+
+        if (collision.gameObject.CompareTag("Player") && (type == OwnerType.FINALBOSS))
+        {
+            if (collision.GetComponent<UnitInfo>().isInvincible || collision.GetComponent<UnitInfo>().hp <= 0) return;
+
+            collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
+
+
+            EffectManager.instance.CreateEffect(EffectType.FINALBOSSBULLETHIT, transform.position, transform.rotation);
+            BulletManager.instance.ReturnObject(gameObject);
+        }
+
+        if (collision.gameObject.CompareTag("Bomb"))
+        {
+            collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
             EffectManager.instance.CreateEffect(EffectType.BULLET1HIT, transform.position, transform.rotation);
             BulletManager.instance.ReturnObject(gameObject);
 

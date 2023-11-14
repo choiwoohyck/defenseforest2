@@ -20,7 +20,7 @@ public class PlayerInfo : MonoBehaviour
     {
       
         money = 0;
-        gameObject.GetComponent<UnitInfo>().StatusInit(100, 1, 50);
+        gameObject.GetComponent<UnitInfo>().StatusInit(10000, 1, 50);
         AllyUnitManager.instance.allyUnits.Add(transform.gameObject);
 
     }
