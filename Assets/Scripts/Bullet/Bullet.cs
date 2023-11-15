@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
 
 
     public float damage = 1f;
-    float dividedTimer = 0f;
+    public float dividedTimer = 0f;
 
     private Vector2 rotVec = Vector2.zero;
     private Vector2 startPos = Vector2.zero;
@@ -94,7 +94,7 @@ public class Bullet : MonoBehaviour
             {
                 dividedTimer += Time.deltaTime;
 
-                if (dividedTimer >= 0.5f && !isMakeChild && divideNum < 8)
+                if (dividedTimer >= 0.8f && !isMakeChild && divideNum < 8)
                 {
                     int childDivideNum = divideNum + 1;
 
@@ -108,6 +108,9 @@ public class Bullet : MonoBehaviour
                     downBullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, transform.rotation.z - 25f);
 
                     isMakeChild = true;
+
+                    dividedTimer = 0;
+
                 }
 
                 float bulletAngle = (transform.rotation.z) * Mathf.Deg2Rad;
@@ -128,7 +131,9 @@ public class Bullet : MonoBehaviour
         target = b_target;
         isDivided = b_isDivided;
         divideNum = b_divideNum;
-
+        isMakeChild = false;
+        transform.rotation = Quaternion.Euler(0,0,0);
+        dividedTimer = 0;
         if (type != OwnerType.MIDDLEBOSS && type != OwnerType.MIDDLEBOSS2 && type != OwnerType.FINALBOSS) 
         transform.rotation = Quaternion.Euler(0,0,Mathf.Atan2(rotVec.y,rotVec.x) * Mathf.Rad2Deg + 180);
     }
@@ -255,6 +260,7 @@ public class Bullet : MonoBehaviour
             BulletManager.instance.ReturnObject(gameObject);
 
         }
+
     }
 
     public void SetOwner(GameObject owner)

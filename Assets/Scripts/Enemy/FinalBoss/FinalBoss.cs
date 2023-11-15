@@ -284,7 +284,13 @@ public class FinalBoss : MonoBehaviour
 
         if (canDivideShoot)
         {
-            GameObject Bullet = BulletManager.instance.GetPooledObject(transform.position + new Vector3(0.9f, 0.78f), 7f, new Vector2(1, 1), OwnerType.FINALBOSS, 15f, null,null,true,0);
+            for (int i = 0; i < 5; i++)
+            {
+                GameObject Bullet = BulletManager.instance.GetPooledObject(transform.position + new Vector3(0.9f, 0.78f), 7f, new Vector2(1, 1), OwnerType.FINALBOSS, 15f, null, null, true, 0);
+                Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, (i-2) * 30);
+
+            }
+            Debug.Log("ÃÑ¾Ë 1°³ ¹ß»ç");
             canDivideShoot = false;
           
         }
@@ -459,8 +465,8 @@ public class FinalBoss : MonoBehaviour
     }
     void ChangePattern()
     {
-        int randomStateNum = Random.Range(1, 4);
-        randomStateNum = 4;
+        int randomStateNum = Random.Range(1, 5);
+        //randomStateNum = 4;
         state = (FinalBossState)randomStateNum;
     }
 

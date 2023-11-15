@@ -27,6 +27,7 @@ public class UIManager : MonoBehaviour
     public GameObject clearUI;
     public GameObject elementOffText;
     public GameObject MiddleBoss;
+    public GameObject FinalBoss;
 
     float changeTimer = 0f;
 
@@ -100,9 +101,12 @@ public class UIManager : MonoBehaviour
 
                 GameManager.instance.Stage++;
 
-                if (GameManager.instance.Stage == 3)
+                if (GameManager.instance.Stage == 3 || GameManager.instance.Stage == 5)
                 {
-                    MiddleBoss.SetActive(true);
+                    if (GameManager.instance.Stage == 3)
+                        MiddleBoss.SetActive(true);
+                    else
+                        FinalBoss.SetActive(true);
                     elementOffText.gameObject.SetActive(false);
 
                     GameManager.instance.gameMaxTime = 120;

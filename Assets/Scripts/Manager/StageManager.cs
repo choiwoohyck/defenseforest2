@@ -31,7 +31,7 @@ public class StageManager : MonoBehaviour
     {
         if (GameManager.instance.isGameTurn)
         {
-            float changeSpeed = GameManager.instance.Stage == 3 ? 2f:4f;
+            float changeSpeed = GameManager.instance.Stage == 3 || GameManager.instance.Stage == 5 ? 2f:4f;
             
             float color = (GlobalLight.GetComponent<Light2D>().color.r * 255) + Time.deltaTime * changeSpeed;
             
