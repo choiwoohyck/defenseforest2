@@ -14,6 +14,7 @@ public class StageManager : MonoBehaviour
     public float gameTime = 0;
     public bool isClearSoundPlay = false;
     public bool bossKill = false;
+    
     // Start is called before the first frame update
 
     private void Awake()
@@ -31,7 +32,7 @@ public class StageManager : MonoBehaviour
     {
         if (GameManager.instance.isGameTurn)
         {
-            float changeSpeed = GameManager.instance.Stage == 3 || GameManager.instance.Stage == 5 ? 2f:4f;
+            float changeSpeed = GameManager.instance.Stage == 3 || GameManager.instance.Stage == 6 ? 2f:4f;
             
             float color = (GlobalLight.GetComponent<Light2D>().color.r * 255) + Time.deltaTime * changeSpeed;
             
@@ -39,8 +40,11 @@ public class StageManager : MonoBehaviour
             gameTime += Time.deltaTime;
         }
 
-        if (gameTime >= GameManager.instance.gameMaxTime || bossKill)
+     
+
+        if ((GameManager.instance.Stage != 3 && GameManager.instance.Stage != 6) && (gameTime >= GameManager.instance.gameMaxTime) || bossKill)
         {
+            
             GameManager.instance.isGameTurn = false;
             AudioManager.instance.StopBGM();
             if (!isClearSoundPlay)
@@ -54,7 +58,19 @@ public class StageManager : MonoBehaviour
 
             gameTime = 0;
             bossKill = false;
+            
         }
+
+        else if (gameTime >= GameManager.instance.gameMaxTime)
+        {
+            if(GameManager.instance.Stage == 3)
+                GameManager.instance.middleBossKillFail = true;
+            else
+                GameManager.instance.finalBossKillFail = true;
+
+        }
+
+
     }
 
     public void ChangeNight()
@@ -68,8 +84,11 @@ public class StageManager : MonoBehaviour
 
         foreach (var enemy in EnemyUnitManager.instance.enemyUnits)
         {
-            enemy.GetComponent<Enemy>().noEnergy = true;
-            enemy.GetComponent<Enemy>().hp = 0;
+            if (enemy.CompareTag("Enemy"))
+            {
+                enemy.GetComponent<Enemy>().noEnergy = true;
+                enemy.GetComponent<Enemy>().hp = 0;
+            }
         }
 
         GlobalLight.GetComponent<Light2D>().color = new Color(1, 1, 1);

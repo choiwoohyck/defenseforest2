@@ -26,17 +26,19 @@ public class MiddleBoss : MonoBehaviour
     float laserAngle = 0;
     float machineTimer = 0;
     float explosionTimer = 0;
+    float machineAngle = 0;
 
     public float patterCoolDownTime = 2f;
 
     bool isWait = false;
     bool isDead = false;
     bool isMachine = false;
+    bool isFinalLaser = false;
     public bool isActive = false;
 
     int laserPattern = 0;
     int shootPattern = 0;
-    int machineBulletCnt = 100;
+    int machineBulletCnt = 0;
     int lastPattern = 0;
     int explosionCnt = 0;
 
@@ -54,7 +56,7 @@ public class MiddleBoss : MonoBehaviour
 
     void init()
     {
-        info.StatusInit(2000, 100, 20);
+        info.StatusInit(3000, 100, 20);
     }
 
     
@@ -68,6 +70,20 @@ public class MiddleBoss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.instance.middleBossKillFail && !isFinalLaser)
+        {
+            UIManager.instance.killFailBossText.SetActive(true);
+            AudioManager.instance.PlayOnShotSFX(5);
+            
+            GameObject laser = Instantiate(laserPrefab);
+            laser.transform.position = new Vector3(transform.position.x - 0.09f, transform.position.y - 5.29f, transform.position.z);
+            laser.transform.rotation = Quaternion.Euler(0, 0, 270);
+            laser.GetComponent<SpriteRenderer>().color = new Color(240, 0, 0);
+            StartCoroutine("BreakMagicStone");
+            isFinalLaser = true;
+            isActive = false;
+        }
+
         if (!isActive) return;
 
         if (info.hp <= 0 && !isDead)
@@ -106,9 +122,10 @@ public class MiddleBoss : MonoBehaviour
             StartCoroutine("Die");
 
             StageManager.instance.bossKill = true;
-            GameManager.instance.energy += 1500;
+            GameManager.instance.energy += 1000;
             bossActiveRange.GetComponent<BossActiveRange>().active = false;
             isActive = false;
+            Player.gameObject.GetComponent<UnitInfo>().hp = Player.gameObject.GetComponent<UnitInfo>().maxHp;
             gameObject.SetActive(false);
         }
 
@@ -131,7 +148,8 @@ public class MiddleBoss : MonoBehaviour
                 if (state == MiddleBossState.MACHINEGUN)
                 {
                     isMachine = true;
-                    machineBulletCnt = 100;
+                    machineBulletCnt = 0;
+                    machineAngle = -40;
                 }
 
                 isWait = true;
@@ -159,26 +177,32 @@ public class MiddleBoss : MonoBehaviour
 
         if (state == MiddleBossState.MACHINEGUN)
         {
+            
             if(isMachine)
             {
                 machineTimer += Time.deltaTime;
                 if (machineTimer >= 0.15f)
                 {
                     GameObject Bullet = BulletManager.instance.GetPooledObject(transform.position, 7f, new Vector2(1, 1), OwnerType.MIDDLEBOSS2, 20f, null);
-                    Bullet.GetComponent<Bullet>().bulletAngle = 10f + (machineBulletCnt) * 7.2f;
 
-                    if (machineBulletCnt > 50)
-                        Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, machineBulletCnt * 3.6f);
+                    if (machineBulletCnt < 60)
+                    {
+                        machineAngle -= 3.6f;
+                        Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, machineAngle);
+                    }
                     else
-                        Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, machineBulletCnt * -3.6f);
+                    {
+                        machineAngle += 3.6f;
+                        Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, machineAngle  );
+                    }
 
                     AudioManager.instance.PlayOnShotSFX(6);
 
-                    machineBulletCnt--;
+                    machineBulletCnt++;
                     machineTimer = 0;
                 }
 
-                if (machineBulletCnt == 0)
+                if (machineBulletCnt == 130)
                     isMachine = false;
             }
 
@@ -653,6 +677,12 @@ public class MiddleBoss : MonoBehaviour
         }
 
 
+    }
+
+    IEnumerator BreakMagicStone()
+    {
+        yield return new WaitForSeconds(1.0f);
+        GameObject.Find("MagicStone").GetComponent<UnitInfo>().DecreaseHP(100000);
     }
 
 }

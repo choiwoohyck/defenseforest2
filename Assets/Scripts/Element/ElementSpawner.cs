@@ -25,15 +25,15 @@ public class ElementSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            SpawnFireElement();
-        }
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    SpawnFireElement();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            SpawnIceElement();
-        }
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    SpawnIceElement();
+        //}
     }
     public void SpawnFireElement()
     {

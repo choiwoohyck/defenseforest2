@@ -36,7 +36,7 @@ public class Element : MonoBehaviour
     {
         elementType = type;
         if (type == ElementType.FIRE)
-            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.5f, 25);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.5f, 15);
         if (type == ElementType.ICE)
             gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.3f, 20);
         if (type == ElementType.ICEROAD)

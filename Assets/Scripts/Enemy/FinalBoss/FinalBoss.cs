@@ -15,7 +15,7 @@ public class FinalBoss : MonoBehaviour
     UnitInfo info;
 
     GameObject Player;
-    GameObject shield;
+    public GameObject shield;
     Animator animator;
 
     float patternTimer = 0;
@@ -94,6 +94,17 @@ public class FinalBoss : MonoBehaviour
     {
         if (!isActive) return;
 
+        if (GameManager.instance.finalBossKillFail)
+        {
+            UIManager.instance.killFailBossText.SetActive(true);
+
+            state = FinalBossState.DRILL;
+            isWait = true;
+            
+            
+            //isActive = false;
+        }
+
         if (info.hp <= 0 && !isDead)
         {
             deadPosition = transform.position;
@@ -157,6 +168,9 @@ public class FinalBoss : MonoBehaviour
             waitTimer += Time.deltaTime;
             if (state == FinalBossState.PUNCH || state == FinalBossState.DRILL)
                 transform.position = new Vector3(transform.position.x,Player.transform.position.y,transform.position.z);
+
+            if (GameManager.instance.finalBossKillFail)
+                transform.position = new Vector3(transform.position.x, 6f, transform.position.z);
 
             if (waitTimer >= 1f)
             {
@@ -290,6 +304,9 @@ public class FinalBoss : MonoBehaviour
                 Bullet.gameObject.transform.rotation = Quaternion.Euler(0, 0, (i-2) * 30);
 
             }
+
+            AudioManager.instance.PlayOnShotSFX(7);
+
             Debug.Log("총알 1개 발사");
             canDivideShoot = false;
           
@@ -348,6 +365,16 @@ public class FinalBoss : MonoBehaviour
                 transform.position = new Vector3(xPos, transform.position.y, transform.position.z);
             }
 
+            if (GameManager.instance.finalBossKillFail)
+            {
+                float distance = Vector2.Distance(transform.position, GameObject.Find("MagicStone").transform.position);
+
+                if (distance <= 0.5f)
+                {
+                    GameObject.Find("MagicStone").GetComponent<UnitInfo>().DecreaseHP(100000);
+                }
+            }
+
             if (!isFakeDrill)
             {
                 rushSpeed += rushAcceleration * Time.deltaTime;
@@ -380,10 +407,8 @@ public class FinalBoss : MonoBehaviour
                 if (drillStopnCnt > 0)
                 {
                     float offset = drillStopnCnt == 1 ? 4 : 2;
-                    Debug.Log("offset : " + offset);
                     if (transform.position.x - offset > drillStartPosition.x)
                     {
-                        Debug.Log("구라에서 멈춤 : " + drillStopnCnt);
                         isRushStop = true;
                         drillStopnCnt--;
                     }
@@ -400,7 +425,6 @@ public class FinalBoss : MonoBehaviour
 
                 if (fakeDrillWaitTimer >= 0.2f)
                 {
-                    Debug.Log("그만 멈추고 다시 시작");
                     isRushStop = false;
                     rushSpeed = originRushSpeed;
                     fakeDrillWaitTimer = 0;
@@ -409,8 +433,6 @@ public class FinalBoss : MonoBehaviour
                     {
                         isFakeDrill = false;
                         animator.speed = 1f;
-                        Debug.Log("구라끝");
-
                     }
                 }
 
@@ -420,7 +442,6 @@ public class FinalBoss : MonoBehaviour
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("SpawnBomb") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 3 / 8f && miniBombCnt < 10f)
         {
-
             animator.speed = 0f;
             minibombSpawnStopTimer += Time.deltaTime;
 
@@ -438,7 +459,7 @@ public class FinalBoss : MonoBehaviour
                     animator.Play("SpawnBomb", -1, 0f);
                 else
                 {
-                    shield.SetActive(true);
+                    //shield.SetActive(true);
                     isSpawnFinished = true;
                 }
 
@@ -451,7 +472,7 @@ public class FinalBoss : MonoBehaviour
             minibombPatternDurationTimer += Time.deltaTime;
             if (minibombPatternDurationTimer >= 10f)
             {
-                shield.SetActive(false);
+                //shield.SetActive(false);
                 animator.SetBool("isSpawn", false);
                 state = FinalBossState.IDLE;
 

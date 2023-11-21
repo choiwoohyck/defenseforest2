@@ -23,6 +23,7 @@ public class BossActiveRange : MonoBehaviour
             camera.isBoss = false;
             Player.GetComponent<MoveController>().inMiddleBossStage = false;
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -31,7 +32,11 @@ public class BossActiveRange : MonoBehaviour
         if (collision.CompareTag("Player") && GameManager.instance.Stage == 3 && active)
         {
             camera.isBoss = true;
-            middleBoss.isActive = true;
+            if (!GameManager.instance.middleBossKillFail)
+                middleBoss.isActive = true;
+
+            Player.GetComponent<MoveController>().inMiddleBossStage = true;
+
         }
     }
 
@@ -40,7 +45,11 @@ public class BossActiveRange : MonoBehaviour
         if (collision.CompareTag("Player") && GameManager.instance.Stage == 3 && active)
         {
             camera.isBoss = true;
-            middleBoss.isActive = true;
+            if (!GameManager.instance.middleBossKillFail)
+                middleBoss.isActive = true;
+
+            Player.GetComponent<MoveController>().inMiddleBossStage = true;
+
         }
     }
 }

@@ -71,24 +71,39 @@ public class BattlePopUp : MonoBehaviour
 
     public void ClickBattleButton()
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished || AllyUnitManager.instance.alreadyClick) return;
+        
+        if (GameManager.instance.Stage != 6)
+        {
+            ActiveBackground(true);
+            battlePopUpUI.SetActive(true);
+            AudioManager.instance.PlayOnShotSFX(2);
+        }
+        else
+        {
+            EndingManager.instance.isEnding = true;
+            AudioManager.instance.PlayOnShotSFX(2);
 
-        ActiveBackground(true);
-        battlePopUpUI.SetActive(true);
-        AudioManager.instance.PlayOnShotSFX(2);
+            if (buildUI.GetComponent<ShowBuildButton>().up)
+                buildUI.GetComponent<ShowBuildButton>().BuildButtonClick();
+
+            buildUI.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        }
     }
 
     public void ClickYesButton()
     {
         ActiveBackground(false);
         battlePopUpUI.SetActive(false);
+        yesButton.sprite = yesButtonSprite;
+
         AudioManager.instance.PlayOnShotSFX(2);
         if(buildUI.GetComponent<ShowBuildButton>().up)
             buildUI.GetComponent<ShowBuildButton>().BuildButtonClick();
 
         buildUI.gameObject.transform.GetChild(0).gameObject.SetActive(false);
         UIManager.instance.fadeImg.gameObject.SetActive(true);
-        if (GameManager.instance.Stage == 2 || GameManager.instance.Stage == 4)
+        if (GameManager.instance.Stage == 2 || GameManager.instance.Stage == 5)
         {
             UIManager.instance.elementOffText.gameObject.SetActive(true);
             AllyUnitManager.instance.AllInactive();
@@ -101,6 +116,9 @@ public class BattlePopUp : MonoBehaviour
 
     public void OnMouseBattleButton()
     {
+        if (!GameManager.instance.isTutorialFinished || AllyUnitManager.instance.alreadyClick) return;
+        
+
         battlePopUpButton.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
     }
 

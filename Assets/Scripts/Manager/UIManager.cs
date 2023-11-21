@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -29,6 +30,11 @@ public class UIManager : MonoBehaviour
     public GameObject MiddleBoss;
     public GameObject FinalBoss;
 
+    public GameObject killFailBossText;
+
+    public GameObject WASDText;
+    public GameObject ArrowKeyText;
+
     float changeTimer = 0f;
 
     public bool changeTimerOn = false;
@@ -47,6 +53,10 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.instance.Stage == 6)
+        {
+            battleButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Ending";
+        }
 
         if (changeTimerOn)
         {
@@ -101,7 +111,7 @@ public class UIManager : MonoBehaviour
 
                 GameManager.instance.Stage++;
 
-                if (GameManager.instance.Stage == 3 || GameManager.instance.Stage == 5)
+                if (GameManager.instance.Stage == 3 || GameManager.instance.Stage == 6)
                 {
                     if (GameManager.instance.Stage == 3)
                         MiddleBoss.SetActive(true);
@@ -146,12 +156,20 @@ public class UIManager : MonoBehaviour
     public void ClickQuitButton()
     {
         SettingUI.SetActive(false);
+        AudioManager.instance.PlayOnShotSFX(2);
+         
         Time.timeScale = 1f;
     }
 
     public void  ClickPauseButton()
     {
+        if (AllyUnitManager.instance.alreadyClick) return;
         SettingUI.SetActive(!SettingUI.activeSelf);
         Time.timeScale = Time.timeScale == 0f ? 1.0f : 0f;
+    }
+
+    public void ClickMainButton()
+    {
+        SceneManager.LoadScene("MainScene");    
     }
 }

@@ -126,6 +126,7 @@ public class DeadComponent : MonoBehaviour
 
     public void Restart()
     {
+        AudioManager.instance.PlayOnShotSFX(2);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
     }

@@ -8,7 +8,7 @@ public class MiniBomb : MonoBehaviour
 
     public float moveSpeed = 5.0f;
     public float maxMoveSpeed;
-
+    public float lifeTimer = 0;
     public Vector3 targetPos;
     Vector3 direction;
     UnitInfo info;
@@ -48,6 +48,16 @@ public class MiniBomb : MonoBehaviour
             {
                 targetPos = GameObject.Find("player").transform.position;
                 moveSpeed += Time.deltaTime;
+                lifeTimer += Time.deltaTime;
+
+                if (lifeTimer >= 5f)
+                {
+                    EffectManager.instance.CreateEffect(EffectType.MINIBOMBEXPLOSION, transform.position, transform.rotation);
+                    AudioManager.instance.PlayOnShotSFX(8);
+
+                    Destroy(gameObject);
+                    lifeTimer = 0;
+                }
             }
 
             

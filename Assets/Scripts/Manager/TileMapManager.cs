@@ -7,6 +7,7 @@ public class BuildTile
 {
     public bool buildable = true;
     public bool isRoad = false;
+    public bool isTree = false;
     public int roadNum = 0;
    
 }
@@ -106,7 +107,6 @@ public class TileMapManager : MonoBehaviour
         Vector3Int gridPosition = map.WorldToCell(playerPos);
         int x = gridPosition.x+13;
         int y = 14-gridPosition.y;
-        Debug.Log("isplayerRoad " +tiles[x, y].isRoad);
         return tiles[x, y].isRoad;
     }
 

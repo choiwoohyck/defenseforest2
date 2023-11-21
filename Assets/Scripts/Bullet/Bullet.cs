@@ -69,6 +69,7 @@ public class Bullet : MonoBehaviour
             //bulletDirection = new Vector2(Mathf.Cos(bulletAngle), Mathf.Sin(bulletAngle));
             bulletDirection = new Vector2(1, 1);
             transform.Translate(bulletDirection * bulletSpeed * Time.deltaTime);
+            transform.position = new Vector3(transform.position.x, transform.position.y, -3f);
         }
 
         if (type == OwnerType.FINALBOSS)
@@ -199,8 +200,6 @@ public class Bullet : MonoBehaviour
                 EffectManager.instance.CreateEffect(EffectType.BULLET1HITWALL, transform.position, transform.rotation);
             if (type == OwnerType.ROADICEELEMENT)
                 EffectManager.instance.CreateEffect(EffectType.ICICLE, transform.position, transform.rotation);
-
-
         }
 
         if (collision.gameObject.CompareTag("Boss") && type == OwnerType.PLAYER)
@@ -227,20 +226,20 @@ public class Bullet : MonoBehaviour
 
         }
 
-        if (collision.gameObject.CompareTag("MagicStone") && (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2))
-        {
-            if (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2)
-                EffectManager.instance.CreateEffect(EffectType.MIDDLEBOSSBULLETHIT, transform.position, transform.rotation);
+        //if (collision.gameObject.CompareTag("MagicStone") && (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2))
+        //{
+        //    if (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2)
+        //        EffectManager.instance.CreateEffect(EffectType.MIDDLEBOSSBULLETHIT, transform.position, transform.rotation);
 
-            BulletManager.instance.ReturnObject(gameObject);
-        }
+        //    BulletManager.instance.ReturnObject(gameObject);
+        //}
 
-        if (collision.gameObject.CompareTag("MagicStone") && (type == OwnerType.PLAYER))
-        {
-            EffectManager.instance.CreateEffect(EffectType.BULLET1HIT, transform.position, transform.rotation);
-            BulletManager.instance.ReturnObject(gameObject);
+        //if (collision.gameObject.CompareTag("MagicStone") && (type == OwnerType.PLAYER))
+        //{
+        //    EffectManager.instance.CreateEffect(EffectType.BULLET1HIT, transform.position, transform.rotation);
+        //    BulletManager.instance.ReturnObject(gameObject);
 
-        }
+        //}
 
         if (collision.gameObject.CompareTag("Player") && (type == OwnerType.FINALBOSS))
         {

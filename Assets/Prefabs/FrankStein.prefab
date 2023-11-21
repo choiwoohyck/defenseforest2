@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5416572538103462638}
   - component: {fileID: 5416572538103462639}
   - component: {fileID: 5416572538103462545}
+  - component: {fileID: 2223565344184659363}
   - component: {fileID: 5416572538103462544}
   - component: {fileID: 5460442364665652256}
-  - component: {fileID: 2223565344184659363}
   - component: {fileID: 2121876202237398151}
   - component: {fileID: 477350508316146131}
   m_Layer: 7
@@ -111,6 +111,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2223565344184659363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5416572538103462636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542a2defca37be248864dbbcf212b243, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5416572538103462544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,16 +136,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  prevTarget: {fileID: 0}
+  type: 1
   state: 0
   hp: 100
   maxhp: 100
   damage: 10
   moveSpeed: 1
   originMoveSpeed: 2
+  waitNum: 0
   frozenCnt: 0
   attackDistance: 1
   isDead: 0
   isFrozen: 0
+  noEnergy: 0
+  spawnNum: 0
 --- !u!61 &5460442364665652256
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -160,18 +177,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2957962, y: 1.806118}
   m_EdgeRadius: 0
---- !u!114 &2223565344184659363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5416572538103462636}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542a2defca37be248864dbbcf212b243, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &2121876202237398151
 Rigidbody2D:
   serializedVersion: 4

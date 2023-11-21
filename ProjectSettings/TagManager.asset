@@ -11,6 +11,7 @@ TagManager:
   - Boss
   - MagicStone
   - Bomb
+  - BGM
   layers:
   - Default
   - TransparentFX

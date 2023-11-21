@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     public GameObject prevTarget;
 
 
-    MonsterType type;
+    public MonsterType type;
     public EnemyState state = EnemyState.SEARCH;
 
 
@@ -28,6 +28,7 @@ public class Enemy : MonoBehaviour
     public bool isDead = false;
     public bool isFrozen = false;
     public bool noEnergy = false;
+    
 
     public int spawnNum;
 
@@ -40,6 +41,7 @@ public class Enemy : MonoBehaviour
     float attackTimer = 0;
     float rushStartTimer = 0;
     float rushTimer = 0;
+    float spawnTimer = 0;
 
 
     Animator animator;
@@ -55,21 +57,54 @@ public class Enemy : MonoBehaviour
         {
             attackDistance = 1.0f;
             damage = 5;
-            hp = 100;
-            moveSpeed = 2f;
+            hp = 90 + GameManager.instance.Stage * 10f;
+
+            
+            moveSpeed = 2f + 0.15f * GameManager.instance.Stage;
         }
 
         if(type == MonsterType.FRANKSTEIN)
         {
             attackDistance = 1.0f;
             damage = 10;
-            hp = 150;
-            moveSpeed = 3f;
+            hp = 140 + GameManager.instance.Stage * 10f;
+
+            moveSpeed = 2.9f + 0.15f * GameManager.instance.Stage;
         }
 
         maxhp = hp;
         originMoveSpeed = moveSpeed;
-         
+
+        isDead = false;
+        isFrozen = false;
+        noEnergy = false;
+        isAttack = false;
+        isRush = false;
+        isFirstTarget = false;
+
+        searchTimer = 0;
+        attackTimer = 0;
+        rushStartTimer = 0;
+        rushTimer = 0;
+        spawnTimer = 0;
+        waitNum = 0;
+
+        direction = Vector3.zero;
+        state = EnemyState.SEARCH;
+        animator = GetComponent<Animator>();
+        animator.speed = 1;
+        target = null;
+        prevTarget = null;
+
+        GetComponent<AddictedComponent>().shakeIntensity = 0;
+        GetComponent<AddictedComponent>().isAddicted = false;
+
+        //GetComponent<HitObject>().ChangeOriginColor();
+        GetComponent<SpriteRenderer>().color = new Color(1,1,1,1);
+        rigidbody2D = GetComponent<Rigidbody2D>();
+        collider2D = GetComponent<BoxCollider2D>();
+        collider2D.isTrigger = false;
+
     }
     void Start()
     {
@@ -83,7 +118,8 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(target == GameObject.Find("player") && (!(TileMapManager.instance.isPlayerRoad()) || TileMapManager.instance.playerRoadNum != spawnNum));
+        
+        spawnTimer += Time.deltaTime;
 
         if (target == GameObject.Find("player") && (!(TileMapManager.instance.isPlayerRoad()) || TileMapManager.instance.playerRoadNum  != spawnNum))
         {
@@ -152,6 +188,7 @@ public class Enemy : MonoBehaviour
                 direction = (target.transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0) - transform.position);
 
             ChangeState(EnemyState.RUN);
+
         }
     }
 
@@ -166,29 +203,51 @@ public class Enemy : MonoBehaviour
         {
             searchTimer += Time.deltaTime;
 
-            /*
-            //if (!target.CompareTag("Player") && TileMapManager.instance.isPlayerRoad() && TileMapManager.instance.playerRoadNum == spawnNum)
-            //{
-            //    float distance = Vector3.Distance(transform.position, target.transform.position);
 
-            //    if (distance > Vector3.Distance(transform.position, GameObject.Find("player").transform.position))
-            //    {
-            //        target = GameObject.Find("player");
-            //        searchTimer = 0;
-            //    }
-            //}*/
-
-            if (searchTimer >= 0.5f)
+            if (!target.CompareTag("Player") && TileMapManager.instance.isPlayerRoad() && TileMapManager.instance.playerRoadNum == spawnNum)
             {
-                if (target.CompareTag("Element"))
-                    target.GetComponent<UnitInfo>().targetedNum--;
+                float distance = Vector3.Distance(transform.position, target.transform.position);
 
-                prevTarget = target;
-                ChangeState(EnemyState.SEARCH);
-                searchTimer = 0;
+                if (distance > Vector3.Distance(transform.position, GameObject.Find("player").transform.position))
+                {
+                    if (target.CompareTag("Element"))
+                    {
+                        target.GetComponent<UnitInfo>().targetedNum--;
+                    }
+
+                    target = GameObject.Find("player");
+                    searchTimer = 0;
+                }
             }
 
-            if (target.CompareTag("Player"))
+            foreach (var ally in AllyUnitManager.instance.allyUnits)
+            {
+                Debug.Log(ally);
+                if (target == ally || ally.GetComponent<UnitInfo>().hp <= 0) continue;
+                if (ally.CompareTag("Player") && (!TileMapManager.instance.isPlayerRoad() || TileMapManager.instance.playerRoadNum != spawnNum)) continue;
+                if (ally.CompareTag("Element") && ally.GetComponent<UnitInfo>().roadNum != spawnNum) continue;
+
+                if (Vector2.Distance(transform.position, ally.transform.position) < 0.95f && ally != GameObject.Find("MagicStone") && !ally.CompareTag("Player"))
+                {
+                    ChangeState(EnemyState.ATTACK);
+                    target = ally;
+                    animator.SetBool("isAttack", true);
+                    isAttack = true;
+                }
+            }
+            /*
+                //if (searchTimer >= 0.5f)
+                //{
+                //    if (target.CompareTag("Element"))
+                //        target.GetComponent<UnitInfo>().targetedNum--;
+
+                //    prevTarget = target;
+                //    ChangeState(EnemyState.SEARCH);
+                //    searchTimer = 0;
+                //}
+            */
+
+                if (target.CompareTag("Player"))
             {
                 if (!isRush)
                  rushStartTimer += Time.deltaTime;
@@ -212,15 +271,15 @@ public class Enemy : MonoBehaviour
                 searchTimer += Time.deltaTime;
 
                 Debug.DrawRay(transform.position, direction * 0.35f, new Color(0, 1, 0));
-                RaycastHit2D[] rayHits = Physics2D.RaycastAll(transform.position, direction, 0.35f);
-                foreach (RaycastHit2D rayHit in rayHits)
-                {
-                    if (rayHit.collider.gameObject.CompareTag("Enemy") && rayHit.collider.gameObject != gameObject)
-                    {
-                        ChangeState(EnemyState.READY);
-                        animator.SetBool("isReady", true);
-                    }
-                }
+                //RaycastHit2D[] rayHits = Physics2D.RaycastAll(transform.position, direction, 0.35f);
+                //foreach (RaycastHit2D rayHit in rayHits)
+                //{
+                //    if (rayHit.collider.gameObject.CompareTag("Enemy") && rayHit.collider.gameObject != gameObject && spawnTimer >= 5f)
+                //    {
+                //        ChangeState(EnemyState.READY);
+                //        animator.SetBool("isReady", true);
+                //    }
+                //}
             }
 
             else if (isRush)
@@ -250,7 +309,7 @@ public class Enemy : MonoBehaviour
             animator.SetFloat("xDir", direction.x);
             animator.SetFloat("yDir", direction.y);
 
-            if (Vector2.Distance(transform.position, target.transform.position) < 0.8f && target != GameObject.Find("MagicStone") && !target.CompareTag("Player"))
+            if (Vector2.Distance(transform.position, target.transform.position) < 0.95f && target != GameObject.Find("MagicStone") && !target.CompareTag("Player"))
             {
                 ChangeState(EnemyState.ATTACK);
                 animator.SetBool("isAttack", true);
@@ -277,9 +336,9 @@ public class Enemy : MonoBehaviour
                 attackTimer = 0;
             }
 
-            if (Vector2.Distance(transform.position, target.transform.position) > 0.9f && target != GameObject.Find("MagicStone")) 
+            if (Vector2.Distance(transform.position, target.transform.position) > 1.0f && target != GameObject.Find("MagicStone")) 
             {
-                ChangeState(EnemyState.SEARCH);
+                ChangeState(EnemyState.RUN);
                 animator.SetBool("isAttack", false);
                 collider2D.isTrigger = false;
             }
@@ -343,6 +402,12 @@ public class Enemy : MonoBehaviour
             else
             {
                 target.GetComponent<UnitInfo>().DecreaseHP(damage);
+
+                if (target.CompareTag("Element") && target.GetComponent<UnitInfo>().hp <= 0)
+                {
+                    TileMapManager.instance.changeBuildable((int)target.GetComponent<Element>().tileMapPos.x, (int)target.GetComponent<Element>().tileMapPos.y);
+                }
+
                 isAttack = true;
             }
         }
@@ -370,7 +435,7 @@ public class Enemy : MonoBehaviour
             target.GetComponent<UnitInfo>().targetedNum--;
 
         EnemyUnitManager.instance.enemyUnits.Remove(gameObject);
-        Destroy(gameObject);
+        EnemyPool.instance.ReturnObject(gameObject);
     }
 
     IEnumerator Frozen()
@@ -422,6 +487,13 @@ public class Enemy : MonoBehaviour
             collision.gameObject.GetComponent<UnitInfo>().DecreaseHP(damage);
             collision.gameObject.GetComponent<HitObject>().ChangeColor();
             hp = 0;
+        }
+
+        if (collision.gameObject.name == ("MagicStone"))
+        {
+            animator.SetBool("isAttack", true);
+            collider2D.isTrigger = true;
+            ChangeState(EnemyState.ATTACK);
         }
     }
 

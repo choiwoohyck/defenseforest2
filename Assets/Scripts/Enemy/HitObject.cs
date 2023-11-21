@@ -32,6 +32,12 @@ public class HitObject : MonoBehaviour
         }
     }
 
+    public void ChangeOriginColor()
+    {
+        renderer.color = originColor;
+        isChange = false;
+    }
+
     public void ChangeColor()
     {        
         renderer.color = Color.red;

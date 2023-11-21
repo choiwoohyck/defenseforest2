@@ -13,6 +13,7 @@ public class EnemySpawner : MonoBehaviour
     public GameObject[] spawnPosition;
 
     float spawnTimer = 0;
+    float addSpawnTimer = 0f;
     public float maxSpawnTimer = 2f;
     public bool stop = true;
     void Start()
@@ -31,7 +32,6 @@ public class EnemySpawner : MonoBehaviour
                 int spawnNum = Random.Range(0,12);
                 Enemy.transform.position = spawnPosition[spawnNum].transform.position;
                 SetRoadNum(ref Enemy, spawnNum);
-                Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                 EnemyUnitManager.instance.enemyUnits.Add(Enemy);
         }
 
@@ -40,7 +40,7 @@ public class EnemySpawner : MonoBehaviour
         if (GameManager.instance.isGameTurn && !stop)
         {
             spawnTimer += Time.deltaTime;
-
+            addSpawnTimer += Time.deltaTime;
             if (GameManager.instance.Stage == 1)
             {
 
@@ -49,11 +49,10 @@ public class EnemySpawner : MonoBehaviour
                     
                      for (int i = 0; i < 4; i++)
                      {
-                        GameObject Enemy = Instantiate(Zombie) as GameObject;
+                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.ZOMBIE);
                         int spawnNum = Random.Range(i * 2, i * 2 + 2);
                         SetRoadNum(ref Enemy, spawnNum);  
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
-                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                         EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
 
@@ -69,22 +68,20 @@ public class EnemySpawner : MonoBehaviour
                     for (int i = 0; i < 4; i++)
                     {
 
-                        GameObject Enemy = Instantiate(Zombie) as GameObject;
+                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.ZOMBIE);
                         int spawnNum = Random.Range(i * 2, i * 2 + 2);
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
-                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                         EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
 
                     for (int i = 4; i < 8; i++)
                     {
 
-                        GameObject Enemy = Instantiate(Zombie) as GameObject;
+                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.ZOMBIE);
                         int spawnNum = Random.Range(i * 2, i * 2 + 2);
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
-                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                         EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
 
@@ -100,36 +97,84 @@ public class EnemySpawner : MonoBehaviour
                     for (int i = 0; i < 4; i++)
                     {
 
-                        GameObject Enemy = Instantiate(FrankStein) as GameObject;
+                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.FRANKSTEIN);
                         int spawnNum = Random.Range(i * 2, i * 2 + 2);
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
-                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
                         EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
 
                     for (int i = 4; i < 8; i++)
                     {
 
-                        GameObject Enemy = Instantiate(Zombie) as GameObject;
+                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.ZOMBIE);
                         int spawnNum = Random.Range(i * 2, i * 2 + 2);
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
-                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.ZOMBIE);
                         EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
 
+                    spawnTimer = 0;
+                }
+
+                if (addSpawnTimer >= 1.3f)
+                {
                     for (int i = 0; i < 2; i++)
                     {
 
-                        GameObject Enemy = Instantiate(FrankStein) as GameObject;
+                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.FRANKSTEIN);
                         int spawnNum = Random.Range(0, 16);
                         SetRoadNum(ref Enemy, spawnNum);
                         Enemy.transform.position = spawnPosition[spawnNum].transform.position;
-                        Enemy.GetComponent<Enemy>().StatusInit(MonsterType.FRANKSTEIN);
                         EnemyUnitManager.instance.enemyUnits.Add(Enemy);
                     }
+                    addSpawnTimer = 0;
+                }
+
+            }
+
+            if (GameManager.instance.Stage == 5)
+            {
+                if (spawnTimer >= maxSpawnTimer)
+                {
+
+                    for (int i = 0; i < 4; i++)
+                    {
+
+                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.FRANKSTEIN);
+                        int spawnNum = Random.Range(i * 2, i * 2 + 2);
+                        SetRoadNum(ref Enemy, spawnNum);
+                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
+                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
+                    }
+
+                    for (int i = 4; i < 8; i++)
+                    {
+
+                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.ZOMBIE);
+                        int spawnNum = Random.Range(i * 2, i * 2 + 2);
+                        SetRoadNum(ref Enemy, spawnNum);
+                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
+                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
+                    }
+
                     spawnTimer = 0;
+                }
+
+                if (addSpawnTimer >= 1.3f)
+                {
+
+                    for (int i = 0; i < 3; i++)
+                    {
+
+                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.FRANKSTEIN);
+                        int spawnNum = Random.Range(0, 16);
+                        SetRoadNum(ref Enemy, spawnNum);
+                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
+                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
+                    }
+
+                    addSpawnTimer = 0;
                 }
 
             }

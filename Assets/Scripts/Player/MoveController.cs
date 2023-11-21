@@ -22,6 +22,8 @@ public class MoveController : MonoBehaviour
     Animator animator;
     UnitInfo info;
 
+    public bool isStop = false;
+    public bool isWASDControl = true;
 
     // Start is called before the first frame update
     void Start()
@@ -37,9 +39,9 @@ public class MoveController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (info.hp > 0)
+        if (info.hp > 0 && !isStop && GameManager.instance.isTutorialFinished)
         {
-
+            animator.speed = 1;
             rigidbody2D.velocity = Vector3.zero;
             rigidbody2D.angularVelocity = 0;
             teleportTimer += Time.deltaTime;
@@ -52,18 +54,27 @@ public class MoveController : MonoBehaviour
             }
 
             if (Input.GetKey(KeyCode.F1))
-                StageManager.instance.gameTime = 60;
+                StageManager.instance.gameTime = 120;
+
+            if (Input.GetKey(KeyCode.F2))
+                info.hp = 100000;
+
 
         }
 
         else
             animator.speed = 0;
+
+        if (isStop)
+        {
+            animator.SetFloat("yDir", 1f);
+        }
         
     }
 
     private void FixedUpdate()
     {
-        if (info.hp > 0)
+        if (info.hp > 0 && !isStop && GameManager.instance.isTutorialFinished)
         {
 
             MoveCharacter();
@@ -73,24 +84,99 @@ public class MoveController : MonoBehaviour
 
     private void MoveCharacter()
     {
-        
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
-            Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) 
-        {
-            moveDir.x = Input.GetAxisRaw("Horizontal");
-            moveDir.y = Input.GetAxisRaw("Vertical");
 
-            AudioManager.instance.PlayOnShotWALKSFX();
-            moveDir.Normalize();
-        
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            isWASDControl = !isWASDControl;
+            UIManager.instance.WASDText.SetActive(isWASDControl);
+            UIManager.instance.ArrowKeyText.SetActive(!isWASDControl);
+
         }
 
+        if (isWASDControl)
+        {
 
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+            if (Input.GetKey(KeyCode.W))
+            {
+                moveDir.y = 1;
+            }
 
-       
-        movement.Normalize();
+            if (Input.GetKey(KeyCode.A))
+            {
+                moveDir.x = -1;
+            }
+
+            if (Input.GetKey(KeyCode.S))
+            {
+                moveDir.y = -1;
+            }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                moveDir.x = 1;
+            }
+
+
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+            {
+                AudioManager.instance.PlayOnShotWALKSFX();
+                moveDir.Normalize();
+            }
+
+            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
+            {
+                moveDir.y = 0;
+            }
+
+            if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+            {
+                moveDir.x = 0;
+            }
+        }
+
+        else
+        {
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                moveDir.y = 1;
+            }
+
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                moveDir.x = -1;
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                moveDir.y = -1;
+            }
+
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                moveDir.x = 1;
+            }
+
+
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))
+            {
+                AudioManager.instance.PlayOnShotWALKSFX();
+                moveDir.Normalize();
+            }
+
+            if (!Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
+            {
+                moveDir.y = 0;
+            }
+
+            if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
+            {
+                moveDir.x = 0;
+            }
+        }
+
+   
+
+        rigidbody2D.MovePosition(rigidbody2D.position + moveDir * movementSpeed * Time.fixedDeltaTime);
 
         float xPos = transform.position.x;
         float yPos = transform.position.y;
@@ -107,8 +193,7 @@ public class MoveController : MonoBehaviour
             yPos = Mathf.Clamp(yPos, 5.2f, 14.45f);
         }
 
-        rigidbody2D.MovePosition(rigidbody2D.position + movement * movementSpeed * Time.fixedDeltaTime);
-        //transform.position = new Vector3(xPos, yPos, transform.position.z);
+        transform.position = new Vector3(xPos, yPos, transform.position.z);
 
     }
 
@@ -117,9 +202,11 @@ public class MoveController : MonoBehaviour
         Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
 
-
+        
         if (hit.transform.gameObject.tag == "Element" && hit.transform.gameObject.GetComponent<Element>().elementType != ElementType.STONE)
         {
+            if (hit.transform.gameObject.GetComponent<Element>().elementType == ElementType.FIRE && hit.transform.gameObject.GetComponent<Element>().isRoad) return;
+
             GameObject selectElement = hit.transform.gameObject;
             selectElement.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = !selectElement.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled;
             //selectElement.transform.GetChild(0).gameObject.SetActive(!selectElement.transform.GetChild(0).gameObject.activeSelf);            
@@ -128,14 +215,73 @@ public class MoveController : MonoBehaviour
 
     private void Teleport()
     {
-
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
-            Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        if (isWASDControl)
         {
-            moveDir.x = Input.GetAxisRaw("Horizontal");
-            moveDir.y = Input.GetAxisRaw("Vertical");
 
-            moveDir.Normalize();
+            if (Input.GetKey(KeyCode.W))
+            {
+                moveDir.y = 1;
+            }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                moveDir.x = -1;
+            }
+
+            if (Input.GetKey(KeyCode.S))
+            {
+                moveDir.y = -1;
+            }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                moveDir.x = 1;
+            }
+
+
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+            {
+                moveDir.Normalize();
+            }
+
+            else
+            {
+                moveDir = new Vector2(0, 0);
+            }
+        }
+
+        else
+        {
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                moveDir.y = 1;
+            }
+
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                moveDir.x = -1;
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                moveDir.y = -1;
+            }
+
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                moveDir.x = 1;
+            }
+
+
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))
+            {
+                moveDir.Normalize();
+            }
+
+            else
+            {
+                moveDir = new Vector2(0, 0);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && teleportTimer >= maxTeleportTimer)
@@ -164,7 +310,7 @@ public class MoveController : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && shootTime >= gameObject.GetComponent<UnitInfo>().attackDelay)
         {
 
-            Vector2 rotVec = new Vector2(moveDir.x, moveDir.y);
+            Vector2 rotVec = new Vector2(animator.GetFloat("xDir"), animator.GetFloat("yDir"));
             Vector2 startVec = new Vector2(transform.position.x, transform.position.y);
 
 
@@ -177,7 +323,7 @@ public class MoveController : MonoBehaviour
 
     private void UpdateState()
     {
-        if (Mathf.Approximately(movement.x , 0) && Mathf.Approximately(movement.y , 0))
+        if (Mathf.Approximately(moveDir.x , 0) && Mathf.Approximately(moveDir.y , 0))
         {
             animator.SetBool("isMove", false);
         }
@@ -185,10 +331,11 @@ public class MoveController : MonoBehaviour
         else
         {
             animator.SetBool("isMove", true);
+            animator.SetFloat("xDir", moveDir.x);
+            animator.SetFloat("yDir", moveDir.y);
         }
 
-        animator.SetFloat("xDir", moveDir.x);
-        animator.SetFloat("yDir", moveDir.y);
+       
     }
 
     private void OnCollisionStay2D(Collision2D collision)

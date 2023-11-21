@@ -120,7 +120,7 @@ public class ShowBuildButton : MonoBehaviour
 
     public void ElementButtonClick(int order)
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished) return;
 
 
         AudioManager.instance.PlayOnShotSFX(2);
@@ -150,7 +150,7 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterFireButton()
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished) return;
 
         DescriptionUI.SetActive(true);
         DescriptionName.text = "불꽃 정령";
@@ -163,7 +163,7 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterICEButton()
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished) return;
 
         DescriptionUI.SetActive(true);
         DescriptionName.text = "얼음 정령";
@@ -176,7 +176,7 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterLeafButton()
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished) return;
 
         DescriptionUI.SetActive(true);
         DescriptionName.text = "풀 정령";
@@ -189,7 +189,7 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterStoneButton()
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished) return;
 
         DescriptionUI.SetActive(true);
         DescriptionName.text = "바위 정령";

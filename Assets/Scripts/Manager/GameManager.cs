@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -14,12 +15,19 @@ public class GameManager : MonoBehaviour
     public bool isGameTurn = false;
     public bool inActiveBuildButton = false;
 
-    public int energy = 800;
+    public bool middleBossKillFail = false;
+    public bool finalBossKillFail = false;
 
+
+    public int energy = 800;
+    public int enemyCnt = 0;
     public int Stage = 0;
 
     public int gameMaxTime = 60;
 
+    public bool isTutorialFinished = false;
+
+    
     private void Awake()
     {
         instance = this;
