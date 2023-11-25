@@ -36,16 +36,16 @@ public class Element : MonoBehaviour
     {
         elementType = type;
         if (type == ElementType.FIRE)
-            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.5f, 15);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.5f, 20);
         if (type == ElementType.ICE)
             gameObject.GetComponent<UnitInfo>().StatusInit(100, 0.3f, 20);
         if (type == ElementType.ICEROAD)
             gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 20);
         if (type == ElementType.LEAF)
-            gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 25);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 1.5f, 50);
         if (type == ElementType.LEAFROAD)
         {
-            gameObject.GetComponent<UnitInfo>().StatusInit(50, 2.5f, 20);
+            gameObject.GetComponent<UnitInfo>().StatusInit(100, 4.5f, 50);
             transform.GetChild(1).gameObject.SetActive(true);
         }
     }

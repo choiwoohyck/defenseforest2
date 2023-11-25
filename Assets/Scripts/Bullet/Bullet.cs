@@ -157,7 +157,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") && collision.GetComponent<Enemy>().hp > 0)
         {
             collision.gameObject.GetComponent<Enemy>().hp -= damage;
 
@@ -226,20 +226,6 @@ public class Bullet : MonoBehaviour
 
         }
 
-        //if (collision.gameObject.CompareTag("MagicStone") && (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2))
-        //{
-        //    if (type == OwnerType.MIDDLEBOSS || type == OwnerType.MIDDLEBOSS2)
-        //        EffectManager.instance.CreateEffect(EffectType.MIDDLEBOSSBULLETHIT, transform.position, transform.rotation);
-
-        //    BulletManager.instance.ReturnObject(gameObject);
-        //}
-
-        //if (collision.gameObject.CompareTag("MagicStone") && (type == OwnerType.PLAYER))
-        //{
-        //    EffectManager.instance.CreateEffect(EffectType.BULLET1HIT, transform.position, transform.rotation);
-        //    BulletManager.instance.ReturnObject(gameObject);
-
-        //}
 
         if (collision.gameObject.CompareTag("Player") && (type == OwnerType.FINALBOSS))
         {

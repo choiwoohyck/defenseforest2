@@ -93,6 +93,11 @@ public class TileMapManager : MonoBehaviour
         tiles[x, y].buildable = !tiles[x, y].buildable;
     }
 
+    public void changeBuildableTrue(int x, int y)
+    {
+        tiles[x, y].buildable = true;
+    }
+
     public bool isRoad()
     {
         int x = (int)TileMapManager.instance.mapPostion().x + 13;

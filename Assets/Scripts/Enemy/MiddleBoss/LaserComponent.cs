@@ -19,7 +19,7 @@ public class LaserComponent : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime <= 8/17f && !isAttack && collision.CompareTag("Player"))
+        if (GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime <= 7/17f && !isAttack && collision.CompareTag("Player"))
         {
             collision.GetComponent<UnitInfo>().DecreaseHP(30f);
             isAttack = true;

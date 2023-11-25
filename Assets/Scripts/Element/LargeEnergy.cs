@@ -34,7 +34,7 @@ public class LargeEnergy : MonoBehaviour
         {
             if (transform.position.y <= originY)
             {
-                GameManager.instance.energy += 10;
+                GameManager.instance.energy += 15;
                 EffectManager.instance.CreateEffect(EnumManagerSpace.EffectType.GATHERINGENERGY, transform.position, transform.rotation);
 
                 owner.GetComponent<CreateEnergyComponent>().timerStart = true;

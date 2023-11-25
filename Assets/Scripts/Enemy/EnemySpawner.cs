@@ -117,19 +117,6 @@ public class EnemySpawner : MonoBehaviour
                     spawnTimer = 0;
                 }
 
-                if (addSpawnTimer >= 1.3f)
-                {
-                    for (int i = 0; i < 2; i++)
-                    {
-
-                        GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.FRANKSTEIN);
-                        int spawnNum = Random.Range(0, 16);
-                        SetRoadNum(ref Enemy, spawnNum);
-                        Enemy.transform.position = spawnPosition[spawnNum].transform.position;
-                        EnemyUnitManager.instance.enemyUnits.Add(Enemy);
-                    }
-                    addSpawnTimer = 0;
-                }
 
             }
 
@@ -164,7 +151,7 @@ public class EnemySpawner : MonoBehaviour
                 if (addSpawnTimer >= 1.3f)
                 {
 
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < 1; i++)
                     {
 
                         GameObject Enemy = EnemyPool.instance.GetPooledObject(MonsterType.FRANKSTEIN);

@@ -150,12 +150,12 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterFireButton()
     {
-        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished || !up) return;
 
         DescriptionUI.SetActive(true);
         DescriptionName.text = "불꽃 정령";
         DescriptionImage.sprite = DescriptionImages[0];
-        DescriptionDamage.text = "25";
+        DescriptionDamage.text = "20";
         DescriptionHP.text = "100";
         Description1.text = "불꽃을 뱉어 적을 공격합니다.";
         Description2.text = "체력이 다하면 폭발합니다.";
@@ -163,7 +163,7 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterICEButton()
     {
-        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished || !up) return;
 
         DescriptionUI.SetActive(true);
         DescriptionName.text = "얼음 정령";
@@ -176,7 +176,7 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterLeafButton()
     {
-        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished || !up) return;
 
         DescriptionUI.SetActive(true);
         DescriptionName.text = "풀 정령";
@@ -189,7 +189,7 @@ public class ShowBuildButton : MonoBehaviour
 
     public void OnMouseEnterStoneButton()
     {
-        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished) return;
+        if (UIManager.instance.SettingUI.activeSelf || !GameManager.instance.isTutorialFinished || !up) return;
 
         DescriptionUI.SetActive(true);
         DescriptionName.text = "바위 정령";
@@ -197,7 +197,7 @@ public class ShowBuildButton : MonoBehaviour
         DescriptionDamage.text = "0";
         DescriptionHP.text = "0";
         Description1.text = "플레이 턴에 공격을 못하는 대신에";
-        Description2.text = "5초에 10에너지를 획득합니다.";
+        Description2.text = "5초에 15에너지를 획득합니다.";
     }
 
     public void ExitMouseBuildButton()

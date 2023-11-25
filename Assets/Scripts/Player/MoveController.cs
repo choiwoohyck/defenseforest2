@@ -53,11 +53,11 @@ public class MoveController : MonoBehaviour
                 ClickElement();
             }
 
-            if (Input.GetKey(KeyCode.F1))
-                StageManager.instance.gameTime = 120;
+            //if (Input.GetKey(KeyCode.F1))
+            //    StageManager.instance.gameTime = 120;
 
-            if (Input.GetKey(KeyCode.F2))
-                info.hp = 100000;
+            //if (Input.GetKey(KeyCode.F2))
+            //    info.hp = 100000;
 
 
         }

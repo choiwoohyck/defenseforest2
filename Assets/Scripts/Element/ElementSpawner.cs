@@ -12,6 +12,8 @@ public class ElementSpawner : MonoBehaviour
     public GameObject BuildBorder;
     public static ElementSpawner instance;
 
+    public ShowBuildButton BuildUI;
+
     private void Awake()
     {
         instance = this;
@@ -37,7 +39,7 @@ public class ElementSpawner : MonoBehaviour
     }
     public void SpawnFireElement()
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !BuildUI.up) return;
 
         if (GameManager.instance.energy < 100) return;
 
@@ -54,7 +56,7 @@ public class ElementSpawner : MonoBehaviour
 
     public void SpawnIceElement()
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !BuildUI.up) return;
 
         if (GameManager.instance.energy < 150) return;
 
@@ -71,7 +73,7 @@ public class ElementSpawner : MonoBehaviour
 
     public void SpawnLeafElement()
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !BuildUI.up) return;
 
         if (GameManager.instance.energy < 200) return;
 
@@ -88,7 +90,7 @@ public class ElementSpawner : MonoBehaviour
 
     public void SpawnStoneElement()
     {
-        if (UIManager.instance.SettingUI.activeSelf) return;
+        if (UIManager.instance.SettingUI.activeSelf || !BuildUI.up) return;
 
         if (GameManager.instance.energy < 200) return;
 

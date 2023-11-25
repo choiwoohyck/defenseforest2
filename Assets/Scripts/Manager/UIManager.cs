@@ -110,11 +110,14 @@ public class UIManager : MonoBehaviour
                 fadeImg.gameObject.SetActive(false);
 
                 GameManager.instance.Stage++;
-
+         
                 if (GameManager.instance.Stage == 3 || GameManager.instance.Stage == 6)
                 {
                     if (GameManager.instance.Stage == 3)
+                    {
                         MiddleBoss.SetActive(true);
+                        GameObject.Find("player").transform.position = new Vector3(0, 8, -1); 
+                    }
                     else
                         FinalBoss.SetActive(true);
                     elementOffText.gameObject.SetActive(false);

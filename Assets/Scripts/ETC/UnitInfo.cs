@@ -28,7 +28,7 @@ public class UnitInfo : MonoBehaviour
          if (isInvincible)
         {
             invincibleTimer += Time.deltaTime;
-            if (invincibleTimer > 0.2f)
+            if (invincibleTimer > 0.5f)
             {
                 invincibleTimer = 0f;
                 isInvincible = false;
@@ -64,8 +64,6 @@ public class UnitInfo : MonoBehaviour
                 {
                     gameObject.GetComponent<DeadComponent>().InitSetting();
                     gameObject.GetComponent<DeadComponent>().alreadyWork = true;
-
-                    Debug.Log("플레이어 뒤짐");
                 }
             }
 

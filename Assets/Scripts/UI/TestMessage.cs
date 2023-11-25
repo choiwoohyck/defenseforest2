@@ -61,12 +61,14 @@ public class TestMessage : MonoBehaviour
         dialogTexts.Add(new DialogData("기본적으로 방향키로 움직일 수 있고 Tab키를 누르면 WASD로 이동키를 바꿀 수 있어.", "MagicStone"));
         dialogTexts.Add(new DialogData("SpaceBar를 누르면 마법을 사용할 수 있어.", "MagicStone"));
         dialogTexts.Add(new DialogData("또 Shift를 누르면 텔레포트를 사용할 수 있어.", "MagicStone"));
+        dialogTexts.Add(new DialogData("텔레포트 하는 도중에는 무적판정이 생겨.", "MagicStone"));
         dialogTexts.Add(new DialogData("하단 밑에 Build UI를 통해 정령들에게 도움을 받을 수 있어.", "MagicStone"));
         dialogTexts.Add(new DialogData("몬스터가 이동하는 길에 정령을 설치하게 되면 능력이 변화되고 체력이 다할때까지 적의 이동을 막아줘.", "MagicStone"));
         dialogTexts.Add(new DialogData("설치하기 전에 마우스 우클릭을 누르면 설치를 취소할 수 있어.", "MagicStone"));
         dialogTexts.Add(new DialogData("하지만 정령에게 도움을 받으려면 에너지가 필요해! 에너지는 적들을 해치우면 얻을 수 있어.", "MagicStone"));
         dialogTexts.Add(new DialogData("준비가 되면 하단에 Battle 버튼을 눌러. 그러면 전투가 시작돼.", "MagicStone"));
         dialogTexts.Add(new DialogData("너의 체력과 나의 체력이 다하면 숲을 보호할 수 없게 되니까 주의해야 해!", "MagicStone"));
+        dialogTexts.Add(new DialogData("참고로 왼쪽 상단에 보이는 빨간색 바가 너의 체력이고 밑에 파란색 바가 내 체력이야!", "MagicStone"));
 
 
 

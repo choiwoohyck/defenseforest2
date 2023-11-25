@@ -405,7 +405,9 @@ public class Enemy : MonoBehaviour
 
                 if (target.CompareTag("Element") && target.GetComponent<UnitInfo>().hp <= 0)
                 {
-                    TileMapManager.instance.changeBuildable((int)target.GetComponent<Element>().tileMapPos.x, (int)target.GetComponent<Element>().tileMapPos.y);
+                    Debug.Log("Á×¿´½À´Ï´ç");
+                    TileMapManager.instance.changeBuildableTrue((int)target.GetComponent<Element>().tileMapPos.x, (int)target.GetComponent<Element>().tileMapPos.y);
+                    Debug.Log((int)target.GetComponent<Element>().tileMapPos.x + " , " + (int)target.GetComponent<Element>().tileMapPos.y);
                 }
 
                 isAttack = true;
